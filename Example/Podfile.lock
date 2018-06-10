@@ -1,0 +1,16 @@
+PODS:
+  - WCEmotionPanelView (0.1.0)
+
+DEPENDENCIES:
+  - WCEmotionPanelView (from `../`)
+
+EXTERNAL SOURCES:
+  WCEmotionPanelView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  WCEmotionPanelView: e60155d5db71dd9880bb1cc7209ff29de4014b60
+
+PODFILE CHECKSUM: 6c57262b3073fa6b9fe00812036cf47a8c314348
+
+COCOAPODS: 1.5.0
