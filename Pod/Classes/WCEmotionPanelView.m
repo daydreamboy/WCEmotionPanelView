@@ -32,6 +32,7 @@
 }
 
 - (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index {
+    NSLog(@"insert group item: %d pages at index %d", (int)groupItem.numberOfPages, (int)index);
     if (groupItem.numberOfPages) {
         groupItem.index = index;
         
@@ -46,8 +47,17 @@
     }
 }
 
-- (void)removeGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index {
-    [self.groupItems removeObjectAtIndex:index];
+- (void)removePagesAtGroupIndex:(NSUInteger)index {
+    NSLog(@"remove group item at index: %d", (int)index);
+    if (index < self.groupItems.count) {
+        for (NSUInteger i = index; i < self.groupItems.count; i++) {
+            WCEmotionGroupItem *groupItem = self.groupItems[i];
+            groupItem.index -= 1;
+        }
+        
+        [self.groupItems removeObjectAtIndex:index];
+        [self.emotionPickerView removePagesAtGroupIndex:index];
+    }
 }
 
 #pragma mark - Getters

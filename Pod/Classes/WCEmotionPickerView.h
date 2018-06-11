@@ -16,8 +16,9 @@
 @property (nonatomic, strong, readonly) WCEmotionPage *currentPage;
 
 - (void)insertPagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex;
-- (void)removePage:(WCEmotionPage *)page atIndex:(NSUInteger)index;
+- (void)removePagesAtGroupIndex:(NSUInteger)index;
+- (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex;
 
-- (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated;
+//- (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated;
 
 @end

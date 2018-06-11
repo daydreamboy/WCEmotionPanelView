@@ -66,7 +66,13 @@
     NSUInteger countOfGroup = self.pages.count;
     if (groupIndex == countOfGroup) {
         
-        CGFloat startX = countOfGroup * pageWidth;
+        if (self.flattenPages.count == 0) {
+            // setup UIControl
+            self.pageControl.numberOfPages = groupItem.numberOfPages;
+            self.pageControl.currentPage = 0;
+        }
+        
+        CGFloat startX = self.flattenPages.count * pageWidth;
         // append
         for (NSUInteger i = 0; i < pages.count; i++) {
             WCEmotionPage *page = pages[i];
@@ -110,13 +116,77 @@
         self.numberOfPages += pages.count;
     }
     
+    // Configure UIScrollView
+    
     CGSize contentSize = self.scrollView.contentSize;
     self.scrollView.contentSize = CGSizeMake(contentSize.width + pages.count * pageWidth, contentSize.height);
+    // Note: keep current page still in visual region of UIScrollView
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
-- (void)removePage:(WCEmotionPage *)page atIndex:(NSUInteger)index {
+- (void)removePagesAtGroupIndex:(NSUInteger)groupIndex {
+    if (groupIndex >= self.pages.count) {
+        return;
+    }
     
+    CGFloat pageWidth = CGRectGetWidth(self.scrollView.bounds);
+    
+    WCEmotionPage *currentPage = nil;
+    if (self.currentPageIndex < self.flattenPages.count) {
+        currentPage = self.flattenPages[self.currentPageIndex];
+    }
+    
+    NSArray *groupOfPages = self.pages[groupIndex];
+    
+    // Note: if not tail, move the following group by offset
+    if (groupIndex < self.pages.count - 1) {
+        CGFloat offset = groupOfPages.count * pageWidth;
+        for (NSUInteger i = groupIndex + 1; i < self.pages.count; i++) {
+            NSArray *pages = self.pages[i];
+            
+            for (NSUInteger j = 0; j < pages.count; j++) {
+                WCEmotionPage *page = pages[j];
+                
+                CGRect frame = page.frame;
+                frame.origin.x -= offset;
+                page.frame = frame;
+                page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)page.groupItem.index, (int)j];
+            }
+        }
+    }
+    
+    // Note: the current page will delete, so change current page to the last page of previous group
+    // and reconfigure UIControl
+    if ([groupOfPages containsObject:currentPage]) {
+        if (groupIndex >= 1) {
+            currentPage = [self.pages[groupIndex - 1] lastObject];
+            self.pageControl.numberOfPages = [self.pages[groupIndex - 1] count];
+            self.pageControl.currentPage = currentPage.index;
+        }
+        else {
+            // Note: no previous group, let the next group to configure UIControl
+            currentPage = nil;
+            
+            if (groupIndex + 1 < self.pages.count) {
+                self.pageControl.numberOfPages = [self.pages[groupIndex + 1] count];
+                self.pageControl.currentPage = currentPage.index;
+            }
+            else {
+                // no group and pages show
+                self.pageControl.numberOfPages = 0;
+                self.pageControl.currentPage = 0;
+            }
+        }
+    }
+    [groupOfPages makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self.pages removeObjectAtIndex:groupIndex];
+    
+    self.numberOfPages -= groupOfPages.count;
+    
+    // Configure UIScrollView
+    CGSize contentSize = self.scrollView.contentSize;
+    self.scrollView.contentSize = CGSizeMake(contentSize.width - groupOfPages.count * pageWidth, contentSize.height);
+    self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
 - (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated {
@@ -161,8 +231,6 @@
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
         UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.scrollView.frame), CGRectGetWidth(self.bounds), pageControlHeight)];
-        pageControl.numberOfPages = 10;//self.currentNumberOfPages;
-        pageControl.currentPage = 0;
         pageControl.backgroundColor = [UICOLOR_ARGB(0xFFCFD3D8) colorWithAlphaComponent:0.3];
         pageControl.pageIndicatorTintColor = UICOLOR_ARGB(0xFFA5A9AD);
         pageControl.currentPageIndicatorTintColor = UICOLOR_ARGB(0xFF67686B);
@@ -190,20 +258,19 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     WCEmotionGroupItem *groupItem = self.currentGroupItem;
     NSLog(@"%d - %d", (int)groupItem.index, (int)self.currentPage.index);
+    self.pageControl.numberOfPages = groupItem.numberOfPages;
+    self.pageControl.currentPage = self.currentPage.index;
 }
 
 #pragma mark - Actions
 
 - (void)pageControlTapped:(UIPageControl *)sender {
-    NSInteger page = sender.currentPage;
-    
-    // Update the scroll view to the appropriate page
-    CGRect frame = _scrollView.frame;
-    frame.origin.x = frame.size.width * page;
-    frame.origin.y = 0;
-    [_scrollView scrollRectToVisible:frame animated:YES];
-    
 //    _pageControlIsChangingPage = YES;
+    
+    NSUInteger groupIndex = self.currentGroupItem.index;
+    NSInteger pageIndex = sender.currentPage;
+    
+    [self scrollToGroupIndex:groupIndex pageIndex:pageIndex animated:YES];
 }
 
 #pragma mark -
@@ -216,6 +283,5 @@
 
     return page;
 }
-
 
 @end

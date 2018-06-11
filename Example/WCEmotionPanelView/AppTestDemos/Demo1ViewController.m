@@ -79,13 +79,14 @@
 
 - (void)addItemClicked:(id)sender {
     WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:nil];
-    groupItem.numberOfPages = 3;
+    groupItem.numberOfPages = arc4random() % 3 + 1;
     [self.emotionPanelView insertGroupItem:groupItem atIndex:self.stepper.value];
     self.stepper.maximumValue = self.stepper.maximumValue + 1;
 }
 
 - (void)removeItemClicked:(id)sender {
-    
+    [self.emotionPanelView removePagesAtGroupIndex:(NSUInteger)self.stepper.value];
+    self.stepper.maximumValue = self.stepper.maximumValue - 1;
 }
 
 @end
