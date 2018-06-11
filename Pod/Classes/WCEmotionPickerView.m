@@ -19,11 +19,14 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIPageControl *pageControl;
 
+// --- total pages
 @property (nonatomic, assign) NSUInteger numberOfPages;
 @property (nonatomic, assign) NSUInteger currentPageIndex;
+@property (nonatomic, strong, readonly) WCEmotionPage *currentPage;
 
 @property (nonatomic, strong) NSMutableArray<NSArray<WCEmotionPage *> *> *pages;
 @property (nonatomic, strong, readonly) NSArray<WCEmotionPage *> *flattenPages;
+
 @end
 
 @implementation WCEmotionPickerView
@@ -46,10 +49,7 @@
     
     CGFloat pageWidth = self.pageWidth;
     
-    WCEmotionPage *currentPage = nil;
-    if (self.currentPageIndex < self.flattenPages.count) {
-        currentPage = self.flattenPages[self.currentPageIndex];
-    }
+    WCEmotionPage *currentPage = self.currentPage;
     
     NSUInteger countOfGroup = self.pages.count;
     if (groupIndex == countOfGroup) {
@@ -109,10 +109,7 @@
     
     CGFloat pageWidth = self.pageWidth;
     
-    WCEmotionPage *currentPage = nil;
-    if (self.currentPageIndex < self.flattenPages.count) {
-        currentPage = self.flattenPages[self.currentPageIndex];
-    }
+    WCEmotionPage *currentPage = self.currentPage;
     
     NSArray *pagesToRemove = self.pages[groupIndex];
     
@@ -166,10 +163,7 @@
     
     CGFloat pageWidth = self.pageWidth;
     
-    WCEmotionPage *currentPage = nil;
-    if (self.currentPageIndex < self.flattenPages.count) {
-        currentPage = self.flattenPages[self.currentPageIndex];
-    }
+    WCEmotionPage *currentPage = self.currentPage;
     
     NSArray *oldGroupOfPages = self.pages[groupIndex];
     NSArray *newGroupOfPages = groupItem.pages;
@@ -237,10 +231,6 @@
     return self.currentPage.groupItem;
 }
 
-- (WCEmotionPage *)currentPage {
-    return self.flattenPages[self.currentPageIndex];
-}
-
 - (CGFloat)pageWidth {
     return CGRectGetWidth(self.scrollView.bounds);
 }
@@ -283,6 +273,14 @@
     // @see https://stackoverflow.com/questions/17087380/flatten-an-nsarray
     NSArray<WCEmotionPage *> *flatArray = [self.pages valueForKeyPath:@"@unionOfArrays.self"];
     return flatArray;
+}
+
+- (WCEmotionPage *)currentPage {
+    WCEmotionPage *currentPage = nil;
+    if (self.currentPageIndex < self.flattenPages.count) {
+        currentPage = self.flattenPages[self.currentPageIndex];
+    }
+    return currentPage;
 }
 
 #pragma mark - UIScrollViewDelegate
