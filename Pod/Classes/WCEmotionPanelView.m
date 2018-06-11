@@ -35,7 +35,7 @@
     return self;
 }
 
-- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index {
+- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)index {
     NSLog(@"insert group item: %d pages at index %d", (int)groupItem.numberOfPages, (int)index);
     if (groupItem.numberOfPages) {
         groupItem.index = index;

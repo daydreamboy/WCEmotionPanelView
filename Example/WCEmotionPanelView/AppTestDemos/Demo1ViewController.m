@@ -82,7 +82,7 @@
 - (void)addItemClicked:(id)sender {
     WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:nil];
     groupItem.numberOfPages = arc4random() % 3 + 1;
-    [self.emotionPanelView insertGroupItem:groupItem atIndex:self.stepper.value];
+    [self.emotionPanelView insertGroupItem:groupItem atGroupIndex:self.stepper.value];
     self.stepper.maximumValue = self.stepper.maximumValue + 1;
 }
 

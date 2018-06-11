@@ -13,7 +13,7 @@
 
 @property (nonatomic, assign) NSUInteger countOfGroupItems;
 
-- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index;
+- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)index;
 - (void)removePagesAtGroupIndex:(NSUInteger)index;
 - (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex;
 
