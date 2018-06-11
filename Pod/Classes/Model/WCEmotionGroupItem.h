@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @class WCEmotionItem;
+@class WCEmotionPage;
 
 typedef NS_ENUM(NSUInteger, WCEmotionGroupItemPosition) {
     WCEmotionGroupItemPositionSlider,
@@ -19,6 +20,7 @@ typedef NS_ENUM(NSUInteger, WCEmotionGroupItemPosition) {
 
 @property (nonatomic, strong, readonly) NSArray<WCEmotionItem *> *emotions;
 @property (nonatomic, assign) NSUInteger index;
+@property (nonatomic, strong) NSMutableArray<WCEmotionPage *> *pages;
 
 - (instancetype)initWithEmotions:(NSArray<WCEmotionItem *> *)emotions;
 

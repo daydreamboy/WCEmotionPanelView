@@ -36,6 +36,14 @@
     return self;
 }
 
+#pragma mark - Public Methods
+
+- (void)makeOriginXByOffset:(NSNumber *)offset {
+    CGRect frame = self.frame;
+    frame.origin.x += [offset floatValue];
+    self.frame = frame;
+}
+
 - (void)layoutKeys:(NSArray<WCEmotionItem *> *)items numberOfRows:(NSUInteger)numberOfRows numberOfColumns:(NSUInteger)numberOfColumns {
     
 }

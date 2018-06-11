@@ -13,4 +13,7 @@
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, weak) WCEmotionGroupItem *groupItem;
 @property (nonatomic, assign) NSUInteger index;
+
+- (void)makeOriginXByOffset:(NSNumber *)offset;
+
 @end

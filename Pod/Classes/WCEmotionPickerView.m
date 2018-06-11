@@ -13,10 +13,6 @@
 #define UICOLOR_ARGB(color)      [UIColor colorWithRed: (((color) >> 16) & 0xFF) / 255.0 green: (((color) >> 8) & 0xFF) / 255.0 blue: ((color) & 0xFF) / 255.0 alpha: (((color) >> 24) & 0xFF) / 255.0]
 #endif
 
-#ifndef UICOLOR_randomColor
-#define UICOLOR_randomColor [UIColor colorWithRed:(arc4random() % 255 / 255.0f) green:(arc4random() % 255 / 255.0f) blue:(arc4random() % 255 / 255.0f) alpha:1]
-#endif
-
 #define pageControlHeight 38
 
 @interface WCEmotionPickerView () <UIScrollViewDelegate>
@@ -46,14 +42,7 @@
 }
 
 - (void)insertPagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    NSMutableArray *pages = [NSMutableArray array];
-    for (NSUInteger i = 0; i < groupItem.numberOfPages; i++) {
-        WCEmotionPage *page = [WCEmotionPage new];
-        page.groupItem = groupItem;
-        page.index = i;
-        page.backgroundColor = UICOLOR_randomColor;
-        [pages addObject:page];
-    }
+    NSMutableArray *pages = groupItem.pages;
     
     CGFloat pageWidth = CGRectGetWidth(self.scrollView.bounds);
     CGFloat pageHeight = CGRectGetHeight(self.scrollView.bounds);
@@ -95,13 +84,10 @@
         CGFloat offset = pages.count * pageWidth;
         for (NSUInteger i = groupIndex; i < self.pages.count; i++) {
             NSArray *groupOfPages = self.pages[i];
+            [groupOfPages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(offset)];
             
             for (NSUInteger j = 0; j < groupOfPages.count; j++) {
                 WCEmotionPage *page = groupOfPages[j];
-                
-                CGRect frame = page.frame;
-                frame.origin.x += offset;
-                page.frame = frame;
                 page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)page.groupItem.index, (int)j];
             }
         }
@@ -144,12 +130,10 @@
         for (NSUInteger i = groupIndex + 1; i < self.pages.count; i++) {
             NSArray *pages = self.pages[i];
             
+            [pages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(-offset)];
+            
             for (NSUInteger j = 0; j < pages.count; j++) {
                 WCEmotionPage *page = pages[j];
-                
-                CGRect frame = page.frame;
-                frame.origin.x -= offset;
-                page.frame = frame;
                 page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)page.groupItem.index, (int)j];
             }
         }
@@ -187,6 +171,14 @@
     CGSize contentSize = self.scrollView.contentSize;
     self.scrollView.contentSize = CGSizeMake(contentSize.width - groupOfPages.count * pageWidth, contentSize.height);
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
+}
+
+- (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
+    if (groupIndex > self.pages.count) {
+        return;
+    }
+    
+    
 }
 
 - (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated {

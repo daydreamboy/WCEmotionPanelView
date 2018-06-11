@@ -11,6 +11,10 @@
 #import "WCEmotionGroupItem.h"
 #import "WCEmotionPage.h"
 
+#ifndef UICOLOR_randomColor
+#define UICOLOR_randomColor [UIColor colorWithRed:(arc4random() % 255 / 255.0f) green:(arc4random() % 255 / 255.0f) blue:(arc4random() % 255 / 255.0f) alpha:1]
+#endif
+
 #define groupViewHeight 34
 
 @interface WCEmotionPanelView ()
@@ -42,8 +46,18 @@
         }
         
         [self.groupItems insertObject:groupItem atIndex:index];
-        [self.emotionPickerView insertPagesWithGroupItem:groupItem atGroupIndex:index];
         
+        NSMutableArray *pages = [NSMutableArray array];
+        for (NSUInteger i = 0; i < groupItem.numberOfPages; i++) {
+            WCEmotionPage *page = [WCEmotionPage new];
+            page.groupItem = groupItem;
+            page.index = i;
+            page.backgroundColor = UICOLOR_randomColor;
+            [pages addObject:page];
+        }
+        groupItem.pages = pages;
+        
+        [self.emotionPickerView insertPagesWithGroupItem:groupItem atGroupIndex:index];
     }
 }
 
