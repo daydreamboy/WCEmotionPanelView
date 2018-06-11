@@ -42,10 +42,9 @@
 }
 
 - (void)insertPagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    NSMutableArray *pages = groupItem.pages;
+    NSMutableArray *pagesToInsert = groupItem.pages;
     
-    CGFloat pageWidth = CGRectGetWidth(self.scrollView.bounds);
-    CGFloat pageHeight = CGRectGetHeight(self.scrollView.bounds);
+    CGFloat pageWidth = self.pageWidth;
     
     WCEmotionPage *currentPage = nil;
     if (self.currentPageIndex < self.flattenPages.count) {
@@ -63,14 +62,13 @@
         
         CGFloat startX = self.flattenPages.count * pageWidth;
         // append
-        for (NSUInteger i = 0; i < pages.count; i++) {
-            WCEmotionPage *page = pages[i];
-            page.frame = CGRectMake(startX + i * pageWidth, 0, pageWidth, pageHeight);
-            page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)countOfGroup, (int)i];
+        for (NSUInteger i = 0; i < pagesToInsert.count; i++) {
+            WCEmotionPage *page = pagesToInsert[i];
+            [page makeOriginXByOffset:@(startX + i * pageWidth)];
             [self.scrollView addSubview:page];
         }
-        [self.pages addObject:pages];
-        self.numberOfPages += pages.count;
+        [self.pages addObject:pagesToInsert];
+        self.numberOfPages += pagesToInsert.count;
     }
     else {
         // insert
@@ -81,31 +79,25 @@
         
         CGFloat startX = CGRectGetMinX(previousPage.frame);
         
-        CGFloat offset = pages.count * pageWidth;
+        CGFloat offset = pagesToInsert.count * pageWidth;
         for (NSUInteger i = groupIndex; i < self.pages.count; i++) {
-            NSArray *groupOfPages = self.pages[i];
-            [groupOfPages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(offset)];
-            
-            for (NSUInteger j = 0; j < groupOfPages.count; j++) {
-                WCEmotionPage *page = groupOfPages[j];
-                page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)page.groupItem.index, (int)j];
-            }
+            NSArray *pages = self.pages[i];
+            [pages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(offset)];
         }
         
-        for (NSUInteger i = 0; i < pages.count; i++) {
-            WCEmotionPage *page = pages[i];
-            page.frame = CGRectMake(startX + i * pageWidth, 0, pageWidth, pageHeight);
-            page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)groupIndex, (int)i];
+        for (NSUInteger i = 0; i < pagesToInsert.count; i++) {
+            WCEmotionPage *page = pagesToInsert[i];
+            [page makeOriginXByOffset:@(startX + i * pageWidth)];
             [self.scrollView addSubview:page];
         }
-        [self.pages insertObject:pages atIndex:groupIndex];
-        self.numberOfPages += pages.count;
+        [self.pages insertObject:pagesToInsert atIndex:groupIndex];
+        self.numberOfPages += pagesToInsert.count;
     }
     
     // Configure UIScrollView
     
     CGSize contentSize = self.scrollView.contentSize;
-    self.scrollView.contentSize = CGSizeMake(contentSize.width + pages.count * pageWidth, contentSize.height);
+    self.scrollView.contentSize = CGSizeMake(contentSize.width + pagesToInsert.count * pageWidth, contentSize.height);
     // Note: keep current page still in visual region of UIScrollView
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
@@ -115,33 +107,27 @@
         return;
     }
     
-    CGFloat pageWidth = CGRectGetWidth(self.scrollView.bounds);
+    CGFloat pageWidth = self.pageWidth;
     
     WCEmotionPage *currentPage = nil;
     if (self.currentPageIndex < self.flattenPages.count) {
         currentPage = self.flattenPages[self.currentPageIndex];
     }
     
-    NSArray *groupOfPages = self.pages[groupIndex];
+    NSArray *pagesToRemove = self.pages[groupIndex];
     
     // Note: if not tail, move the following group by offset
     if (groupIndex < self.pages.count - 1) {
-        CGFloat offset = groupOfPages.count * pageWidth;
+        CGFloat offset = pagesToRemove.count * pageWidth;
         for (NSUInteger i = groupIndex + 1; i < self.pages.count; i++) {
             NSArray *pages = self.pages[i];
-            
             [pages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(-offset)];
-            
-            for (NSUInteger j = 0; j < pages.count; j++) {
-                WCEmotionPage *page = pages[j];
-                page.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)page.groupItem.index, (int)j];
-            }
         }
     }
     
     // Note: the current page will delete, so change current page to the last page of previous group
     // and reconfigure UIControl
-    if ([groupOfPages containsObject:currentPage]) {
+    if ([pagesToRemove containsObject:currentPage]) {
         if (groupIndex >= 1) {
             currentPage = [self.pages[groupIndex - 1] lastObject];
             self.pageControl.numberOfPages = [self.pages[groupIndex - 1] count];
@@ -162,23 +148,33 @@
             }
         }
     }
-    [groupOfPages makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [pagesToRemove makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.pages removeObjectAtIndex:groupIndex];
     
-    self.numberOfPages -= groupOfPages.count;
+    self.numberOfPages -= pagesToRemove.count;
     
     // Configure UIScrollView
     CGSize contentSize = self.scrollView.contentSize;
-    self.scrollView.contentSize = CGSizeMake(contentSize.width - groupOfPages.count * pageWidth, contentSize.height);
+    self.scrollView.contentSize = CGSizeMake(contentSize.width - pagesToRemove.count * pageWidth, contentSize.height);
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
 - (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    if (groupIndex > self.pages.count) {
+    if (groupIndex > self.pages.count || groupItem.pages.count == 0) {
         return;
     }
     
+    CGFloat pageWidth = self.pageWidth;
     
+    NSArray *oldGroupOfPages = self.pages[groupIndex];
+    NSArray *newGroupOfPages = groupItem.pages;
+    
+    CGFloat offset = (newGroupOfPages.count - oldGroupOfPages.count) * pageWidth;
+    
+    for (NSUInteger i = groupIndex; i < self.pages.count; i++) {
+        NSArray *pages = self.pages[i];
+        [pages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(offset)];
+    }
 }
 
 - (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated {
@@ -195,7 +191,7 @@
     [self.scrollView scrollRectToVisible:page.frame animated:animated];
 }
 
-#pragma mark >
+#pragma mark > Properties
 
 - (WCEmotionGroupItem *)currentGroupItem {
     return self.currentPage.groupItem;
@@ -203,6 +199,14 @@
 
 - (WCEmotionPage *)currentPage {
     return self.flattenPages[self.currentPageIndex];
+}
+
+- (CGFloat)pageWidth {
+    return CGRectGetWidth(self.scrollView.bounds);
+}
+
+- (CGFloat)pageHeight {
+    return CGRectGetHeight(self.scrollView.bounds);
 }
 
 #pragma mark - Getters

@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong, readonly) WCEmotionGroupItem *currentGroupItem;
 @property (nonatomic, strong, readonly) WCEmotionPage *currentPage;
+@property (nonatomic, assign, readonly) CGFloat pageWidth;
+@property (nonatomic, assign, readonly) CGFloat pageHeight;
 
 - (void)insertPagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex;
 - (void)removePagesAtGroupIndex:(NSUInteger)index;

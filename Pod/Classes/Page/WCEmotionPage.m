@@ -8,6 +8,7 @@
 #import "WCEmotionPage.h"
 #import "WCEmotionKey.h"
 #import "WCEmotionItem.h"
+#import "WCEmotionGroupItem.h"
 
 @interface WCEmotionPage ()
 @property (nonatomic, assign) CGSize keySize;
@@ -20,8 +21,8 @@
 
 @implementation WCEmotionPage
 
-- (instancetype)init {
-    self = [super init];
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     if (self) {
         self.clipsToBounds = NO;
         _keys = [NSMutableArray array];
@@ -42,6 +43,9 @@
     CGRect frame = self.frame;
     frame.origin.x += [offset floatValue];
     self.frame = frame;
+    
+    // DEBUG:
+    self.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)self.groupItem.index, (int)self.index];
 }
 
 - (void)layoutKeys:(NSArray<WCEmotionItem *> *)items numberOfRows:(NSUInteger)numberOfRows numberOfColumns:(NSUInteger)numberOfColumns {

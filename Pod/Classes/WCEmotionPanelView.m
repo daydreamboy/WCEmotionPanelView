@@ -49,7 +49,7 @@
         
         NSMutableArray *pages = [NSMutableArray array];
         for (NSUInteger i = 0; i < groupItem.numberOfPages; i++) {
-            WCEmotionPage *page = [WCEmotionPage new];
+            WCEmotionPage *page = [[WCEmotionPage alloc] initWithFrame:CGRectMake(0, 0, self.emotionPickerView.pageWidth, self.emotionPickerView.pageHeight)];
             page.groupItem = groupItem;
             page.index = i;
             page.backgroundColor = UICOLOR_randomColor;
