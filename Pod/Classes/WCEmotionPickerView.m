@@ -166,15 +166,55 @@
     
     CGFloat pageWidth = self.pageWidth;
     
+    WCEmotionPage *currentPage = nil;
+    if (self.currentPageIndex < self.flattenPages.count) {
+        currentPage = self.flattenPages[self.currentPageIndex];
+    }
+    
     NSArray *oldGroupOfPages = self.pages[groupIndex];
     NSArray *newGroupOfPages = groupItem.pages;
     
-    CGFloat offset = (newGroupOfPages.count - oldGroupOfPages.count) * pageWidth;
+    WCEmotionPage *previousPage = [oldGroupOfPages firstObject];
+    CGFloat startX = CGRectGetMinX(previousPage.frame);
+    
+    // Note: if newGroupOfPages.count < oldGroupOfPages.count, (newGroupOfPages.count - oldGroupOfPages.count) will generate big positive number,
+    // so cast it to NSInteger
+    CGFloat offset = (NSInteger)(newGroupOfPages.count - oldGroupOfPages.count) * pageWidth;
     
     for (NSUInteger i = groupIndex; i < self.pages.count; i++) {
         NSArray *pages = self.pages[i];
         [pages makeObjectsPerformSelector:@selector(makeOriginXByOffset:) withObject:@(offset)];
     }
+    
+    [oldGroupOfPages makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    for (NSUInteger i = 0; i < newGroupOfPages.count; i++) {
+        WCEmotionPage *page = newGroupOfPages[i];
+        [page makeOriginXByOffset:@(startX + i * pageWidth)];
+        [self.scrollView addSubview:page];
+    }
+    
+    if ([oldGroupOfPages containsObject:currentPage]) {
+        if (groupIndex >= 1) {
+            currentPage = [self.pages[groupIndex - 1] lastObject];
+            self.pageControl.numberOfPages = [self.pages[groupIndex - 1] count];
+            self.pageControl.currentPage = currentPage.index;
+        }
+        else {
+            currentPage = nil;
+            self.pageControl.numberOfPages = newGroupOfPages.count;
+            self.pageControl.currentPage = 0;
+        }
+    }
+    
+    self.pages[groupIndex] = newGroupOfPages;
+    
+    self.numberOfPages += (NSInteger)(newGroupOfPages.count - oldGroupOfPages.count);
+    
+    // Configure UIScrollView
+    CGSize contentSize = self.scrollView.contentSize;
+    self.scrollView.contentSize = CGSizeMake(contentSize.width + offset, contentSize.height);
+    self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
 - (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated {

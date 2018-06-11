@@ -9,6 +9,7 @@
 #import "Demo1ViewController.h"
 #import <WCEmotionPanelView/WCEmotionPanelView.h>
 #import <WCEmotionPanelView/WCEmotionGroupItem.h>
+#import <WCEmotionPanelView/WCEmotionPage.h>
 
 @interface Demo1ViewController ()
 @property (nonatomic, strong) WCEmotionPanelView *emotionPanelView;
@@ -22,10 +23,11 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Group" style:UIBarButtonItemStylePlain target:self action:@selector(addItemClicked:)];
-    UIBarButtonItem *removeItem = [[UIBarButtonItem alloc] initWithTitle:@"Remove Group" style:UIBarButtonItemStylePlain target:self action:@selector(removeItemClicked:)];
+    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStylePlain target:self action:@selector(addItemClicked:)];
+    UIBarButtonItem *removeItem = [[UIBarButtonItem alloc] initWithTitle:@"Remove" style:UIBarButtonItemStylePlain target:self action:@selector(removeItemClicked:)];
+    UIBarButtonItem *replaceItem = [[UIBarButtonItem alloc] initWithTitle:@"Replace" style:UIBarButtonItemStylePlain target:self action:@selector(replaceItemClicked:)];
 
-    self.navigationItem.rightBarButtonItems = @[removeItem, addItem];
+    self.navigationItem.rightBarButtonItems = @[replaceItem, removeItem, addItem];
     
     [self.view addSubview:self.emotionPanelView];
     [self.view addSubview:self.stepper];
@@ -69,7 +71,7 @@
     return _labelIndex;
 }
 
-#pragma mark -
+#pragma mark - Actions
 
 - (void)stepperClicked:(id)sender {
     UIStepper *stepper = (UIStepper *)sender;
@@ -87,6 +89,14 @@
 - (void)removeItemClicked:(id)sender {
     [self.emotionPanelView removePagesAtGroupIndex:(NSUInteger)self.stepper.value];
     self.stepper.maximumValue = self.stepper.maximumValue - 1;
+}
+
+- (void)replaceItemClicked:(id)sender {
+    WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:nil];
+    groupItem.numberOfPages = arc4random() % 3 + 1;
+    
+    NSUInteger groupIndex = self.stepper.value;
+    [self.emotionPanelView updatePagesWithGroupItem:groupItem atGroupIndex:groupIndex];
 }
 
 @end

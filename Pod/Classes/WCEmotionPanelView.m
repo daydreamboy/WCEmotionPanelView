@@ -74,6 +74,27 @@
     }
 }
 
+- (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
+    NSLog(@"update group item at index: %d", (int)groupIndex);
+    if (groupIndex < self.groupItems.count && groupItem.numberOfPages) {
+        
+        groupItem.index = groupIndex;
+        
+        NSMutableArray *pages = [NSMutableArray array];
+        for (NSUInteger i = 0; i < groupItem.numberOfPages; i++) {
+            WCEmotionPage *page = [[WCEmotionPage alloc] initWithFrame:CGRectMake(0, 0, self.emotionPickerView.pageWidth, self.emotionPickerView.pageHeight)];
+            page.groupItem = groupItem;
+            page.index = i;
+            page.backgroundColor = UICOLOR_randomColor;
+            [pages addObject:page];
+        }
+        groupItem.pages = pages;
+
+        self.groupItems[groupIndex] = groupItem;
+        [self.emotionPickerView updatePagesWithGroupItem:groupItem atGroupIndex:groupIndex];
+    }
+}
+
 #pragma mark - Getters
 
 - (UIView *)emotionPickerView {
