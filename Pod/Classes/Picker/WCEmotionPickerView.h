@@ -21,4 +21,6 @@
 - (void)updatePagesWithGroup:(WCEmotionGroup *)group atGroupIndex:(NSUInteger)groupIndex;
 - (void)removePagesAtGroupIndex:(NSUInteger)index;
 
+- (void)scrollToGroupIndex:(NSUInteger)groupIndex pageIndex:(NSUInteger)pageIndex animated:(BOOL)animated;
+
 @end

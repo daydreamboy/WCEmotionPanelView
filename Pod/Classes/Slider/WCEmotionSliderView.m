@@ -10,6 +10,7 @@
 #import "WCEmotionSliderCell.h"
 #import "WCEmotionSliderLayout.h"
 #import "WCEmotionSliderCellSeparator.h"
+#import "WCEmotionGroup.h"
 
 #ifndef UNSPECIFIED
 #define UNSPECIFIED 0
@@ -19,7 +20,7 @@
 @property (nonatomic, strong) UIView *leftView;
 @property (nonatomic, strong) UIView *rightView;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray<id<WCEmotionGroupItem>> *collectionData;
+@property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *collectionData;
 
 @end
 
@@ -37,7 +38,7 @@
     return self;
 }
 
-- (void)insertGroupItem:(id<WCEmotionGroupItem>)groupItem atIndex:(NSUInteger)index {
+- (void)insertGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index {
     [self.collectionData insertObject:groupItem atIndex:index];
     [self.collectionView reloadData];
 }
@@ -46,7 +47,7 @@
     
 }
 
-- (void)updateGroupItem:(id<WCEmotionGroupItem>)groupItem atIndex:(NSUInteger)index {
+- (void)updateGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index {
     
 }
 
@@ -112,7 +113,8 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WCEmotionSliderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([WCEmotionSliderCell class]) forIndexPath:indexPath];
-    id<WCEmotionGroupItem> item = self.collectionData[indexPath.row];
+    WCEmotionGroup *group = self.collectionData[indexPath.row];
+    id<WCEmotionGroupItem> item = group.emotionGroupItem;
     
     CGSize size = item.groupIcon.size;
     if (!CGSizeEqualToSize(item.groupIconSize, CGSizeZero)) {
@@ -137,17 +139,17 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    id<WCEmotionGroupItem> item = self.collectionData[indexPath.row];
+    WCEmotionGroup *group = self.collectionData[indexPath.row];
+    id<WCEmotionGroupItem> item = group.emotionGroupItem;
     return CGSizeMake(item.width, CGRectGetHeight(self.bounds));
 }
 
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
-    
-    //@selector(WCEmotionSliderView:didSelectItemAtIndex:)
+    if ([self.delegate respondsToSelector:@selector(WCEmotionSliderView:didSelectGroup:atIndex:)]) {
+        [self.delegate WCEmotionSliderView:self didSelectGroup:self.collectionData[indexPath.row] atIndex:indexPath];
+    }
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {

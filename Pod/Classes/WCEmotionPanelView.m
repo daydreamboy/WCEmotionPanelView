@@ -61,7 +61,7 @@
         group.pages = pages;
         
         [self.emotionPickerView insertPagesWithGroup:group atGroupIndex:groupIndex];
-        [self.emotionSliderView insertGroupItem:groupItem atIndex:groupIndex];
+        [self.emotionSliderView insertGroupItem:group atIndex:groupIndex];
     }
 }
 
@@ -124,6 +124,8 @@
 
 #pragma mark - WCEmotionSliderViewDelegate
 
-
+- (void)WCEmotionSliderView:(WCEmotionSliderView *)emotionSliderView didSelectGroup:(WCEmotionGroup *)group atIndex:(NSIndexPath *)indexPath {
+    [self.emotionPickerView scrollToGroupIndex:group.index pageIndex:0 animated:YES];
+}
 
 @end

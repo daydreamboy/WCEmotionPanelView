@@ -7,17 +7,19 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol WCEmotionSliderViewDelegate
+@class WCEmotionSliderView;
+@class WCEmotionGroup;
 
+@protocol WCEmotionSliderViewDelegate <NSObject>
+- (void)WCEmotionSliderView:(WCEmotionSliderView *)emotionSliderView didSelectGroup:(WCEmotionGroup *)group atIndex:(NSIndexPath *)indexPath;
 @end
 
 @protocol WCEmotionGroupItem;
-@class WCEmotionGroup;
 
 @interface WCEmotionSliderView : UIView
 
 @property (nonatomic, weak) id<WCEmotionSliderViewDelegate> delegate;
 
-- (void)insertGroupItem:(id<WCEmotionGroupItem>)groupItem atIndex:(NSUInteger)index;
+- (void)insertGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index;
 
 @end
