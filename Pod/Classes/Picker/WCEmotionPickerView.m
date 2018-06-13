@@ -45,8 +45,8 @@
     return self;
 }
 
-- (void)insertPagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    NSMutableArray *pagesToInsert = groupItem.pages;
+- (void)insertPagesWithGroup:(WCEmotionGroup *)group atGroupIndex:(NSUInteger)groupIndex {
+    NSMutableArray *pagesToInsert = group.pages;
     
     CGFloat pageWidth = self.pageWidth;
     
@@ -57,7 +57,7 @@
         
         if (self.flattenPages.count == 0) {
             // setup UIControl
-            self.pageControl.numberOfPages = groupItem.numberOfPages;
+            self.pageControl.numberOfPages = group.numberOfPages;
             self.pageControl.currentPage = 0;
         }
         
@@ -157,8 +157,8 @@
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
-- (void)updatePagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    if (groupIndex > self.pages.count || groupItem.pages.count == 0) {
+- (void)updatePagesWithGroup:(WCEmotionGroup *)group atGroupIndex:(NSUInteger)groupIndex {
+    if (groupIndex > self.pages.count || group.pages.count == 0) {
         return;
     }
     
@@ -167,7 +167,7 @@
     WCEmotionPage *currentPage = self.currentPage;
     
     NSArray *oldGroupOfPages = self.pages[groupIndex];
-    NSArray *newGroupOfPages = groupItem.pages;
+    NSArray *newGroupOfPages = group.pages;
     
     WCEmotionPage *previousPage = [oldGroupOfPages firstObject];
     CGFloat startX = CGRectGetMinX(previousPage.frame);
@@ -228,8 +228,8 @@
 
 #pragma mark > Properties
 
-- (WCEmotionGroup *)currentGroupItem {
-    return self.currentPage.groupItem;
+- (WCEmotionGroup *)currentGroup {
+    return self.currentPage.group;
 }
 
 - (CGFloat)pageWidth {
@@ -291,9 +291,9 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    WCEmotionGroup *groupItem = self.currentGroupItem;
-    NSLog(@"%d - %d", (int)groupItem.index, (int)self.currentPage.index);
-    self.pageControl.numberOfPages = groupItem.numberOfPages;
+    WCEmotionGroup *group = self.currentGroup;
+    NSLog(@"%d - %d", (int)group.index, (int)self.currentPage.index);
+    self.pageControl.numberOfPages = group.numberOfPages;
     self.pageControl.currentPage = self.currentPage.index;
 }
 
@@ -302,7 +302,7 @@
 - (void)pageControlTapped:(UIPageControl *)sender {
 //    _pageControlIsChangingPage = YES;
     
-    NSUInteger groupIndex = self.currentGroupItem.index;
+    NSUInteger groupIndex = self.currentGroup.index;
     NSInteger pageIndex = sender.currentPage;
     
     [self scrollToGroupIndex:groupIndex pageIndex:pageIndex animated:YES];

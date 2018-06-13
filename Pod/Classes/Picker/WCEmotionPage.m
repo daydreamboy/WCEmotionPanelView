@@ -6,7 +6,6 @@
 //
 
 #import "WCEmotionPage.h"
-#import "WCEmotionKey.h"
 #import "WCEmotionItem.h"
 #import "WCEmotionGroupItem.h"
 #import "WCEmotionPanelView.h"
@@ -21,7 +20,7 @@
 @property (nonatomic, assign, readwrite) NSUInteger index;
 @property (nonatomic, assign, readwrite) NSUInteger groupIndex;
 
-@property (nonatomic, weak, readwrite) WCEmotionGroup *groupItem;
+@property (nonatomic, weak, readwrite) WCEmotionGroup *group;
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, assign, readwrite) NSUInteger numberOfItems;
@@ -33,27 +32,22 @@
 @property (nonatomic, assign, readwrite) NSUInteger capacityOfPage;
 @property (nonatomic, assign, readwrite) NSUInteger availableCapacityOfPage;
 
-
-// key views
-@property (nonatomic, strong) NSArray<WCEmotionKey *> *keys;
-// key data
-@property (nonatomic, strong) NSArray<id<WCEmotionItem>> *keyItems;
 @end
 
 @implementation WCEmotionPage
 
-- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroup *)groupItem {
+- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame group:(WCEmotionGroup *)group {
     self = [super initWithFrame:frame];
     if (self) {
         self.clipsToBounds = NO;
         _index = index;
-        _groupItem = groupItem;
-        _numberOfItemsInRow = groupItem.numberOfItemsInRow;
-        _numberOfItemsInColumn = groupItem.numberOfItemsInColumn;
-        _capacityOfPage = groupItem.capacityOfPage;
-        _availableCapacityOfPage = groupItem.availableCapacityOfPage;
-        _reservedItems = groupItem.reservedItems;
-        _numberOfReservedItems = groupItem.numberOfReservedItems;
+        _group = group;
+        _numberOfItemsInRow = group.numberOfItemsInRow;
+        _numberOfItemsInColumn = group.numberOfItemsInColumn;
+        _capacityOfPage = group.capacityOfPage;
+        _availableCapacityOfPage = group.availableCapacityOfPage;
+        _reservedItems = group.reservedItems;
+        _numberOfReservedItems = group.numberOfReservedItems;
         _itemSize = CGSizeMake(self.frame.size.width / _numberOfItemsInRow, self.frame.size.height / _numberOfItemsInColumn);
         
         [self addSubview:self.collectionView];
@@ -89,7 +83,7 @@
         view.delegate = self;
         view.backgroundColor = [UIColor clearColor];
         
-        [view registerClass:self.groupItem.emotionGroupItem.cellClass forCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass)];
+        [view registerClass:self.group.emotionGroupItem.cellClass forCellWithReuseIdentifier:NSStringFromClass(self.group.emotionGroupItem.cellClass)];
         [view registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
         
         _collectionView = view;
@@ -100,7 +94,7 @@
 
 - (NSUInteger)numberOfItems {
     if (_numberOfItems == 0) {
-        NSUInteger numberOfTotalItems = self.groupItem.numberOfItems;
+        NSUInteger numberOfTotalItems = self.group.numberOfItems;
         NSUInteger numberOfTotalPages = (NSUInteger)(ceil((float)numberOfTotalItems / self.availableCapacityOfPage));
         
         if (self.index == numberOfTotalPages - 1) {
@@ -122,7 +116,7 @@
     self.frame = frame;
     
     // DEBUG:
-    self.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)self.groupItem.index, (int)self.index];
+    self.textLabel.text = [NSString stringWithFormat:@"%d-%d", (int)self.group.index, (int)self.index];
 }
 
 - (void)layoutSubviews {
@@ -133,7 +127,7 @@
 
 - (id<WCEmotionItem>)itemAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger index = self.index * self.availableCapacityOfPage + indexPath.row;
-    return self.groupItem.emotionGroupItem.emotions[index];
+    return self.group.emotionGroupItem.emotions[index];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -144,7 +138,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.numberOfItems) {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.group.emotionGroupItem.cellClass) forIndexPath:indexPath];
         
         if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
             id<WCEmotionItem> item = [self itemAtIndexPath:indexPath];
@@ -155,7 +149,7 @@
     }
     else {
         if (indexPath.row == self.capacityOfPage - 2 && self.numberOfReservedItems == 2) {
-            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.group.emotionGroupItem.cellClass) forIndexPath:indexPath];
             
             if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
                 id<WCEmotionItem> item = [self.reservedItems firstObject];
@@ -166,7 +160,7 @@
         }
         else if (indexPath.row == self.capacityOfPage - 1 && (self.numberOfReservedItems == 2 || self.numberOfReservedItems == 1)) {
             
-            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.group.emotionGroupItem.cellClass) forIndexPath:indexPath];
             
             if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
                 id<WCEmotionItem> item = self.numberOfReservedItems == 2 ? [self.reservedItems lastObject] : [self.reservedItems firstObject];

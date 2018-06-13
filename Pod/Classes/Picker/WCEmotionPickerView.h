@@ -13,12 +13,12 @@
 
 @interface WCEmotionPickerView : UIView
 
-@property (nonatomic, strong, readonly) WCEmotionGroup *currentGroupItem;
+@property (nonatomic, strong, readonly) WCEmotionGroup *currentGroup;
 @property (nonatomic, assign, readonly) CGFloat pageWidth;
 @property (nonatomic, assign, readonly) CGFloat pageHeight;
 
-- (void)insertPagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex;
+- (void)insertPagesWithGroup:(WCEmotionGroup *)group atGroupIndex:(NSUInteger)groupIndex;
+- (void)updatePagesWithGroup:(WCEmotionGroup *)group atGroupIndex:(NSUInteger)groupIndex;
 - (void)removePagesAtGroupIndex:(NSUInteger)index;
-- (void)updatePagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex;
 
 @end

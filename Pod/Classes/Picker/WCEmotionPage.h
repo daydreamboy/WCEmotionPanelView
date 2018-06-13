@@ -12,7 +12,7 @@
 
 @interface WCEmotionPage : UIView
 @property (nonatomic, strong) UILabel *textLabel;
-@property (nonatomic, weak, readonly) WCEmotionGroup *groupItem;
+@property (nonatomic, weak, readonly) WCEmotionGroup *group;
 @property (nonatomic, assign, readonly) NSUInteger index;
 @property (nonatomic, assign, readonly) NSUInteger groupIndex;
 @property (nonatomic, assign, readonly) CGSize itemSize;
@@ -23,7 +23,7 @@
 
 @property (nonatomic, assign, readonly) NSUInteger capacityOfPage; /// > 放置item容量（包括reserved items）
 
-- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroup *)groupItem;
+- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame group:(WCEmotionGroup *)group;
 
 - (void)makeOriginXByOffset:(NSNumber *)offset;
 
