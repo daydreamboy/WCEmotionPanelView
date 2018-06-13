@@ -17,8 +17,20 @@
     self = [super init];
     if (self) {
         _emotions = emotions;
+        _cellClass = [UICollectionViewCell class];
     }
     return self;
+}
+
+#pragma mark - Properties
+
+- (NSUInteger)numberOfPages {
+    NSUInteger numberOfItemsInPage = self.numberOfItemsInRow * self.numberOfItemsInColomn;
+    return (NSUInteger)(ceil(self.emotions.count / (float)numberOfItemsInPage));
+}
+
+- (NSUInteger)numberOfItems {
+    return self.emotions.count;
 }
 
 @end

@@ -7,9 +7,12 @@
 //
 
 #import "Demo1ViewController.h"
+#import "PresetEmotionCell.h"
+
 #import <WCEmotionPanelView/WCEmotionPanelView.h>
 #import <WCEmotionPanelView/WCEmotionGroupItem.h>
 #import <WCEmotionPanelView/WCEmotionPage.h>
+#import <WCEmotionPanelView/WCEmotionItem.h>
 
 @interface Demo1ViewController ()
 @property (nonatomic, strong) WCEmotionPanelView *emotionPanelView;
@@ -80,8 +83,34 @@
 }
 
 - (void)addItemClicked:(id)sender {
-    WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:nil];
-    groupItem.numberOfPages = arc4random() % 3 + 1;
+    NSString *emotionBundlePath = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"Emoticon.bundle"];
+    
+    NSString *orderPlistFilePath = [emotionBundlePath stringByAppendingPathComponent:@"emotionOrder.plist"];
+    NSString *codePlistFilePath = [emotionBundlePath stringByAppendingPathComponent:@"EmoticonInfo.plist"];
+    
+    NSMutableArray<WCEmotionItem *> *items = [NSMutableArray array];
+    NSArray<NSString *> *emotionNameList = [NSArray arrayWithContentsOfFile:orderPlistFilePath];
+    NSDictionary<NSString *, NSArray *> *emotionCodeDict = [NSDictionary dictionaryWithContentsOfFile:codePlistFilePath];
+    
+    for (NSUInteger i = 0; i < emotionNameList.count; i++) {
+        NSString *imageName = emotionNameList[i];
+        
+        WCEmotionItem *item = [WCEmotionItem new];
+        item.name = imageName;
+        item.codes = emotionCodeDict[imageName];
+        
+        [items addObject:item];
+    }
+    
+    WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:items];
+    //groupItem.numberOfPages = arc4random() % 3 + 1;
+    NSString *imageName = [NSString stringWithFormat:@"EmotionGroupIcon_%d", arc4random() % 8 + 1];
+    groupItem.groupIcon = [UIImage imageNamed:imageName];
+    groupItem.groupIconSize = CGSizeMake(21, 21);
+    groupItem.width = 45.5;
+    groupItem.numberOfItemsInColomn = 3;
+    groupItem.numberOfItemsInRow = 8;
+    groupItem.cellClass = [PresetEmotionCell class];
     [self.emotionPanelView insertGroupItem:groupItem atGroupIndex:self.stepper.value];
     self.stepper.maximumValue = self.stepper.maximumValue + 1;
 }
@@ -93,7 +122,10 @@
 
 - (void)replaceItemClicked:(id)sender {
     WCEmotionGroupItem *groupItem = [[WCEmotionGroupItem alloc] initWithEmotions:nil];
-    groupItem.numberOfPages = arc4random() % 3 + 1;
+    //groupItem.numberOfPages = arc4random() % 3 + 1;
+    groupItem.groupIcon = [UIImage imageNamed:[NSString stringWithFormat:@"EmotionGroupIcon_%d", arc4random() % 8 + 1]];
+    groupItem.groupIconSize = CGSizeMake(21, 21);
+    groupItem.width = 45.5;
     
     NSUInteger groupIndex = self.stepper.value;
     [self.emotionPanelView updatePagesWithGroupItem:groupItem atGroupIndex:groupIndex];

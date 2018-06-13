@@ -9,6 +9,7 @@
 
 @interface WCEmotionItem : NSObject
 
+@property (nonatomic, copy) NSString *name; /// < 名称
 @property (nonatomic, strong) NSArray<NSString *> *codes; /// < 表情编码
 //@property (nonatomic, strong) NSString *
 

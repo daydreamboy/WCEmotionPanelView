@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F601E5020D02A1800FA8A30 /* PresetEmotionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F601E4F20D02A1800FA8A30 /* PresetEmotionCell.m */; };
+		4F83D3AD20CEC45600F2FE80 /* EmotionGroupIcon_8@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */; };
+		4F83D3AE20CEC45600F2FE80 /* EmotionGroupIcon_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */; };
+		4F83D3AF20CEC45600F2FE80 /* EmotionGroupIcon_6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A720CEC45500F2FE80 /* EmotionGroupIcon_6@2x.png */; };
+		4F83D3B020CEC45600F2FE80 /* EmotionGroupIcon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A820CEC45500F2FE80 /* EmotionGroupIcon_2@2x.png */; };
+		4F83D3B120CEC45600F2FE80 /* EmotionGroupIcon_5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A920CEC45500F2FE80 /* EmotionGroupIcon_5@2x.png */; };
+		4F83D3B220CEC45600F2FE80 /* EmotionGroupIcon_7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3AA20CEC45500F2FE80 /* EmotionGroupIcon_7@2x.png */; };
+		4F83D3B320CEC45600F2FE80 /* EmotionGroupIcon_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3AB20CEC45500F2FE80 /* EmotionGroupIcon_3@2x.png */; };
+		4F83D3B420CEC45600F2FE80 /* EmotionGroupIcon_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3AC20CEC45500F2FE80 /* EmotionGroupIcon_1@2x.png */; };
+		4F97DB4420D00434003EBB3B /* Emoticon.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4F97DB4320D00434003EBB3B /* Emoticon.bundle */; };
 		4FB1D4A420CC070A00DBA776 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1D49F20CC070A00DBA776 /* RootViewController.m */; };
 		4FB1D4A520CC070A00DBA776 /* Demo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1D4A120CC070A00DBA776 /* Demo1ViewController.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -22,6 +32,17 @@
 
 /* Begin PBXFileReference section */
 		3E86068C56E84D91A5195A72 /* Pods_WCEmotionPanelView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WCEmotionPanelView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F601E4E20D02A1800FA8A30 /* PresetEmotionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresetEmotionCell.h; sourceTree = "<group>"; };
+		4F601E4F20D02A1800FA8A30 /* PresetEmotionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresetEmotionCell.m; sourceTree = "<group>"; };
+		4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_8@2x.png"; sourceTree = "<group>"; };
+		4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_4@2x.png"; sourceTree = "<group>"; };
+		4F83D3A720CEC45500F2FE80 /* EmotionGroupIcon_6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_6@2x.png"; sourceTree = "<group>"; };
+		4F83D3A820CEC45500F2FE80 /* EmotionGroupIcon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_2@2x.png"; sourceTree = "<group>"; };
+		4F83D3A920CEC45500F2FE80 /* EmotionGroupIcon_5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_5@2x.png"; sourceTree = "<group>"; };
+		4F83D3AA20CEC45500F2FE80 /* EmotionGroupIcon_7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_7@2x.png"; sourceTree = "<group>"; };
+		4F83D3AB20CEC45500F2FE80 /* EmotionGroupIcon_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_3@2x.png"; sourceTree = "<group>"; };
+		4F83D3AC20CEC45500F2FE80 /* EmotionGroupIcon_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_1@2x.png"; sourceTree = "<group>"; };
+		4F97DB4320D00434003EBB3B /* Emoticon.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Emoticon.bundle; sourceTree = "<group>"; };
 		4FB1D49F20CC070A00DBA776 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		4FB1D4A120CC070A00DBA776 /* Demo1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo1ViewController.m; sourceTree = "<group>"; };
 		4FB1D4A220CC070A00DBA776 /* Demo1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo1ViewController.h; sourceTree = "<group>"; };
@@ -71,11 +92,29 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4F83D3A420CEC45500F2FE80 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4F97DB4320D00434003EBB3B /* Emoticon.bundle */,
+				4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */,
+				4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */,
+				4F83D3A720CEC45500F2FE80 /* EmotionGroupIcon_6@2x.png */,
+				4F83D3A820CEC45500F2FE80 /* EmotionGroupIcon_2@2x.png */,
+				4F83D3A920CEC45500F2FE80 /* EmotionGroupIcon_5@2x.png */,
+				4F83D3AA20CEC45500F2FE80 /* EmotionGroupIcon_7@2x.png */,
+				4F83D3AB20CEC45500F2FE80 /* EmotionGroupIcon_3@2x.png */,
+				4F83D3AC20CEC45500F2FE80 /* EmotionGroupIcon_1@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		4FB1D4A020CC070A00DBA776 /* AppTestDemos */ = {
 			isa = PBXGroup;
 			children = (
 				4FB1D4A220CC070A00DBA776 /* Demo1ViewController.h */,
 				4FB1D4A120CC070A00DBA776 /* Demo1ViewController.m */,
+				4F601E4E20D02A1800FA8A30 /* PresetEmotionCell.h */,
+				4F601E4F20D02A1800FA8A30 /* PresetEmotionCell.m */,
 			);
 			path = AppTestDemos;
 			sourceTree = "<group>";
@@ -121,6 +160,7 @@
 				6003F59C195388D20070C39A /* AppDelegate.h */,
 				6003F59D195388D20070C39A /* AppDelegate.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
+				4F83D3A420CEC45500F2FE80 /* Resources */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
@@ -206,7 +246,16 @@
 			files = (
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
+				4F83D3AD20CEC45600F2FE80 /* EmotionGroupIcon_8@2x.png in Resources */,
+				4F83D3B120CEC45600F2FE80 /* EmotionGroupIcon_5@2x.png in Resources */,
+				4F83D3B020CEC45600F2FE80 /* EmotionGroupIcon_2@2x.png in Resources */,
+				4F83D3AE20CEC45600F2FE80 /* EmotionGroupIcon_4@2x.png in Resources */,
+				4F83D3B420CEC45600F2FE80 /* EmotionGroupIcon_1@2x.png in Resources */,
+				4F83D3AF20CEC45600F2FE80 /* EmotionGroupIcon_6@2x.png in Resources */,
+				4F83D3B320CEC45600F2FE80 /* EmotionGroupIcon_3@2x.png in Resources */,
+				4F97DB4420D00434003EBB3B /* Emoticon.bundle in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				4F83D3B220CEC45600F2FE80 /* EmotionGroupIcon_7@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F601E5020D02A1800FA8A30 /* PresetEmotionCell.m in Sources */,
 				6003F59E195388D20070C39A /* AppDelegate.m in Sources */,
 				4FB1D4A520CC070A00DBA776 /* Demo1ViewController.m in Sources */,
 				4FB1D4A420CC070A00DBA776 /* RootViewController.m in Sources */,

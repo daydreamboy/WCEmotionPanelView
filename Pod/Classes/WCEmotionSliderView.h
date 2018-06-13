@@ -7,6 +7,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class WCEmotionGroupItem;
+
 @interface WCEmotionSliderView : UIView
+
+- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index;
 
 @end
