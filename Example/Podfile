@@ -2,5 +2,5 @@ use_frameworks!
 platform :ios, '8.0'
 
 target 'WCEmotionPanelView_Example' do
-  pod 'WCEmotionPanelView', :path => '../'
+  pod 'WCEmotionPanel', :path => '../'
 end

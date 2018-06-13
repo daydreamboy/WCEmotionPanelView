@@ -11,26 +11,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WCEmotionPanelView;
 @class WCEmotionPage;
-@class WCEmotionItem;
+@protocol WCEmotionItem;
 
-@protocol WCEmotionPanelViewDataSource
-- (void)WCEmotionPanelView:(WCEmotionPanelView *)emotionPanelView cellForItem:(WCEmotionItem *)item atIndexPath:(NSIndexPath *)indexPath pageIndex:(NSUInteger)pageIndex groupIndex:(NSUInteger)groupIndex;
-@end
+//@protocol WCEmotionPanelViewDataSource
+//- (void)WCEmotionPanelView:(WCEmotionPanelView *)emotionPanelView cellForItem:(id<WCEmotionItem>)item atIndexPath:(NSIndexPath *)indexPath pageIndex:(NSUInteger)pageIndex groupIndex:(NSUInteger)groupIndex;
+//@end
 
 @protocol WCEmotionPanelCellDataSource
-- (void)WCEmotionPage:(WCEmotionPage *)emotionPage cellForItem:(WCEmotionItem *)item atIndexPath:(NSIndexPath *)indexPath;
+- (void)WCEmotionPage:(WCEmotionPage *)emotionPage cellForItem:(id<WCEmotionItem>)item atIndexPath:(NSIndexPath *)indexPath;
 @end
 
-@class WCEmotionGroupItem;
+@protocol WCEmotionGroupItem;
 
 @interface WCEmotionPanelView : UIView
 
 @property (nonatomic, assign) NSUInteger countOfGroupItems;
-@property (nonatomic, weak) id<WCEmotionPanelViewDataSource> dataSource;
+//@property (nonatomic, weak) id<WCEmotionPanelViewDataSource> dataSource;
 
-- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)index;
+- (void)insertGroupItem:(id<WCEmotionGroupItem>)groupItem atGroupIndex:(NSUInteger)index;
 - (void)removePagesAtGroupIndex:(NSUInteger)index;
-- (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex;
+- (void)updatePagesWithGroupItem:(id<WCEmotionGroupItem>)groupItem atGroupIndex:(NSUInteger)groupIndex;
 
 @end
 

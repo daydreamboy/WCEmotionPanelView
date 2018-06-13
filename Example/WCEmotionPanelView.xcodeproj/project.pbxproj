@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4F601E5020D02A1800FA8A30 /* PresetEmotionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F601E4F20D02A1800FA8A30 /* PresetEmotionCell.m */; };
+		4F7318B220D114AF0035432F /* WCEmotionGroupItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F7318AF20D114AF0035432F /* WCEmotionGroupItemModel.m */; };
+		4F7318B320D114AF0035432F /* WCEmotionItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F7318B020D114AF0035432F /* WCEmotionItemModel.m */; };
+		4F7318C420D1242F0035432F /* WCEmotionGroupItemExtraModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F7318C320D1242F0035432F /* WCEmotionGroupItemExtraModel.m */; };
+		4F7BA56D20D16EA6001043D3 /* custom_emotion1.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4F7BA56C20D16EA6001043D3 /* custom_emotion1.bundle */; };
 		4F83D3AD20CEC45600F2FE80 /* EmotionGroupIcon_8@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */; };
 		4F83D3AE20CEC45600F2FE80 /* EmotionGroupIcon_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */; };
 		4F83D3AF20CEC45600F2FE80 /* EmotionGroupIcon_6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F83D3A720CEC45500F2FE80 /* EmotionGroupIcon_6@2x.png */; };
@@ -34,6 +38,13 @@
 		3E86068C56E84D91A5195A72 /* Pods_WCEmotionPanelView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WCEmotionPanelView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F601E4E20D02A1800FA8A30 /* PresetEmotionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresetEmotionCell.h; sourceTree = "<group>"; };
 		4F601E4F20D02A1800FA8A30 /* PresetEmotionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PresetEmotionCell.m; sourceTree = "<group>"; };
+		4F7318AE20D114AF0035432F /* WCEmotionItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEmotionItemModel.h; sourceTree = "<group>"; };
+		4F7318AF20D114AF0035432F /* WCEmotionGroupItemModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEmotionGroupItemModel.m; sourceTree = "<group>"; };
+		4F7318B020D114AF0035432F /* WCEmotionItemModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEmotionItemModel.m; sourceTree = "<group>"; };
+		4F7318B120D114AF0035432F /* WCEmotionGroupItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEmotionGroupItemModel.h; sourceTree = "<group>"; };
+		4F7318C220D1242F0035432F /* WCEmotionGroupItemExtraModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCEmotionGroupItemExtraModel.h; sourceTree = "<group>"; };
+		4F7318C320D1242F0035432F /* WCEmotionGroupItemExtraModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WCEmotionGroupItemExtraModel.m; sourceTree = "<group>"; };
+		4F7BA56C20D16EA6001043D3 /* custom_emotion1.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = custom_emotion1.bundle; path = "custom emotions/custom_emotion1.bundle"; sourceTree = "<group>"; };
 		4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_8@2x.png"; sourceTree = "<group>"; };
 		4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_4@2x.png"; sourceTree = "<group>"; };
 		4F83D3A720CEC45500F2FE80 /* EmotionGroupIcon_6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EmotionGroupIcon_6@2x.png"; sourceTree = "<group>"; };
@@ -92,9 +103,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4F7318AD20D114AF0035432F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4F7318AE20D114AF0035432F /* WCEmotionItemModel.h */,
+				4F7318B020D114AF0035432F /* WCEmotionItemModel.m */,
+				4F7318C220D1242F0035432F /* WCEmotionGroupItemExtraModel.h */,
+				4F7318C320D1242F0035432F /* WCEmotionGroupItemExtraModel.m */,
+				4F7318B120D114AF0035432F /* WCEmotionGroupItemModel.h */,
+				4F7318AF20D114AF0035432F /* WCEmotionGroupItemModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		4F83D3A420CEC45500F2FE80 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F7BA56C20D16EA6001043D3 /* custom_emotion1.bundle */,
 				4F97DB4320D00434003EBB3B /* Emoticon.bundle */,
 				4F83D3A520CEC45500F2FE80 /* EmotionGroupIcon_8@2x.png */,
 				4F83D3A620CEC45500F2FE80 /* EmotionGroupIcon_4@2x.png */,
@@ -111,6 +136,7 @@
 		4FB1D4A020CC070A00DBA776 /* AppTestDemos */ = {
 			isa = PBXGroup;
 			children = (
+				4F7318AD20D114AF0035432F /* Model */,
 				4FB1D4A220CC070A00DBA776 /* Demo1ViewController.h */,
 				4FB1D4A120CC070A00DBA776 /* Demo1ViewController.m */,
 				4F601E4E20D02A1800FA8A30 /* PresetEmotionCell.h */,
@@ -253,6 +279,7 @@
 				4F83D3B420CEC45600F2FE80 /* EmotionGroupIcon_1@2x.png in Resources */,
 				4F83D3AF20CEC45600F2FE80 /* EmotionGroupIcon_6@2x.png in Resources */,
 				4F83D3B320CEC45600F2FE80 /* EmotionGroupIcon_3@2x.png in Resources */,
+				4F7BA56D20D16EA6001043D3 /* custom_emotion1.bundle in Resources */,
 				4F97DB4420D00434003EBB3B /* Emoticon.bundle in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				4F83D3B220CEC45600F2FE80 /* EmotionGroupIcon_7@2x.png in Resources */,
@@ -287,11 +314,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-WCEmotionPanelView_Example/Pods-WCEmotionPanelView_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/WCEmotionPanelView/WCEmotionPanelView.framework",
+				"${BUILT_PRODUCTS_DIR}/WCEmotionPanel/WCEmotionPanel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCEmotionPanelView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCEmotionPanel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -309,6 +336,9 @@
 				6003F59E195388D20070C39A /* AppDelegate.m in Sources */,
 				4FB1D4A520CC070A00DBA776 /* Demo1ViewController.m in Sources */,
 				4FB1D4A420CC070A00DBA776 /* RootViewController.m in Sources */,
+				4F7318B220D114AF0035432F /* WCEmotionGroupItemModel.m in Sources */,
+				4F7318C420D1242F0035432F /* WCEmotionGroupItemExtraModel.m in Sources */,
+				4F7318B320D114AF0035432F /* WCEmotionItemModel.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

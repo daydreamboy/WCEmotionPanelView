@@ -10,6 +10,7 @@
 #import "WCEmotionItem.h"
 #import "WCEmotionGroupItem.h"
 #import "WCEmotionPanelView.h"
+#import "WCEmotionGroup.h"
 
 #ifndef UICOLOR_randomColor
 #define UICOLOR_randomColor [UIColor colorWithRed:(arc4random() % 255 / 255.0f) green:(arc4random() % 255 / 255.0f) blue:(arc4random() % 255 / 255.0f) alpha:1]
@@ -20,34 +21,40 @@
 @property (nonatomic, assign, readwrite) NSUInteger index;
 @property (nonatomic, assign, readwrite) NSUInteger groupIndex;
 
-@property (nonatomic, weak, readwrite) WCEmotionGroupItem *groupItem;
+@property (nonatomic, weak, readwrite) WCEmotionGroup *groupItem;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, assign) NSUInteger numberOfItems;
+
+@property (nonatomic, assign, readwrite) NSUInteger numberOfItems;
+@property (nonatomic, assign, readwrite) NSUInteger numberOfItemsInRow;
+@property (nonatomic, assign, readwrite) NSUInteger numberOfItemsInColumn;
+
+@property (nonatomic, assign, readwrite) NSUInteger numberOfReservedItems;
+@property (nonatomic, strong) NSArray<id<WCEmotionItem>> *reservedItems;
+@property (nonatomic, assign, readwrite) NSUInteger capacityOfPage;
+@property (nonatomic, assign, readwrite) NSUInteger availableCapacityOfPage;
+
 
 // key views
 @property (nonatomic, strong) NSArray<WCEmotionKey *> *keys;
 // key data
-@property (nonatomic, strong) NSArray<WCEmotionItem *> *keyItems;
+@property (nonatomic, strong) NSArray<id<WCEmotionItem>> *keyItems;
 @end
 
 @implementation WCEmotionPage
 
-- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroupItem *)groupItem {
+- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroup *)groupItem {
     self = [super initWithFrame:frame];
     if (self) {
         self.clipsToBounds = NO;
-        _keys = [NSMutableArray array];
         _index = index;
         _groupItem = groupItem;
-        _itemSize = CGSizeMake(self.frame.size.width / groupItem.numberOfItemsInRow, self.frame.size.height / groupItem.numberOfItemsInColomn);
-        
-        if (index == groupItem.numberOfPages - 1) {
-            // last page
-            _numberOfItems = groupItem.numberOfItems - index * (groupItem.numberOfItemsInColomn * groupItem.numberOfItemsInRow);
-        }
-        else {
-            _numberOfItems = groupItem.numberOfItemsInColomn * groupItem.numberOfItemsInRow;
-        }
+        _numberOfItemsInRow = groupItem.numberOfItemsInRow;
+        _numberOfItemsInColumn = groupItem.numberOfItemsInColumn;
+        _capacityOfPage = groupItem.capacityOfPage;
+        _availableCapacityOfPage = groupItem.availableCapacityOfPage;
+        _reservedItems = groupItem.reservedItems;
+        _numberOfReservedItems = groupItem.numberOfReservedItems;
+        _itemSize = CGSizeMake(self.frame.size.width / _numberOfItemsInRow, self.frame.size.height / _numberOfItemsInColumn);
         
         [self addSubview:self.collectionView];
         [self addSubview:self.textLabel];
@@ -82,12 +89,29 @@
         view.delegate = self;
         view.backgroundColor = [UIColor clearColor];
         
-        [view registerClass:self.groupItem.cellClass forCellWithReuseIdentifier:NSStringFromClass(self.groupItem.cellClass)];
+        [view registerClass:self.groupItem.emotionGroupItem.cellClass forCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass)];
+        [view registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class])];
         
         _collectionView = view;
     }
     
     return _collectionView;
+}
+
+- (NSUInteger)numberOfItems {
+    if (_numberOfItems == 0) {
+        NSUInteger numberOfTotalItems = self.groupItem.numberOfItems;
+        NSUInteger numberOfTotalPages = (NSUInteger)(ceil((float)numberOfTotalItems / self.availableCapacityOfPage));
+        
+        if (self.index == numberOfTotalPages - 1) {
+            // last page
+            _numberOfItems = numberOfTotalItems - self.index * self.availableCapacityOfPage;
+        }
+        else {
+            _numberOfItems = self.availableCapacityOfPage;
+        }
+    }
+    return _numberOfItems;
 }
 
 #pragma mark - Public Methods
@@ -107,35 +131,57 @@
     self.textLabel.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds));
 }
 
-- (WCEmotionItem *)itemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    NSUInteger index;
-    if (self.index > 0) {
-        index = (self.index - 1) * (self.groupItem.numberOfItemsInColomn * self.groupItem.numberOfItemsInRow) + indexPath.row;
-    }
-    else {
-        index = indexPath.row;
-    }
-    
-    return self.groupItem.emotions[index];
+- (id<WCEmotionItem>)itemAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger index = self.index * self.availableCapacityOfPage + indexPath.row;
+    return self.groupItem.emotionGroupItem.emotions[index];
 }
 
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.numberOfItems;
+    return self.capacityOfPage;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.cellClass) forIndexPath:indexPath];
-    cell.contentView.backgroundColor = UICOLOR_randomColor;
-    
-    if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
-        WCEmotionItem *item = [self itemAtIndexPath:indexPath];
-        [(id<WCEmotionPanelCellDataSource>)cell WCEmotionPage:self cellForItem:item atIndexPath:indexPath];
+    if (indexPath.row < self.numberOfItems) {
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+        
+        if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
+            id<WCEmotionItem> item = [self itemAtIndexPath:indexPath];
+            [(id<WCEmotionPanelCellDataSource>)cell WCEmotionPage:self cellForItem:item atIndexPath:indexPath];
+        }
+        
+        return cell;
     }
-    
-    return cell;
+    else {
+        if (indexPath.row == self.capacityOfPage - 2 && self.numberOfReservedItems == 2) {
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+            
+            if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
+                id<WCEmotionItem> item = [self.reservedItems firstObject];
+                [(id<WCEmotionPanelCellDataSource>)cell WCEmotionPage:self cellForItem:item atIndexPath:indexPath];
+            }
+            
+            return cell;
+        }
+        else if (indexPath.row == self.capacityOfPage - 1 && (self.numberOfReservedItems == 2 || self.numberOfReservedItems == 1)) {
+            
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass(self.groupItem.emotionGroupItem.cellClass) forIndexPath:indexPath];
+            
+            if ([cell respondsToSelector:@selector(WCEmotionPage:cellForItem:atIndexPath:)]) {
+                id<WCEmotionItem> item = self.numberOfReservedItems == 2 ? [self.reservedItems lastObject] : [self.reservedItems firstObject];
+                [(id<WCEmotionPanelCellDataSource>)cell WCEmotionPage:self cellForItem:item atIndexPath:indexPath];
+            }
+            
+            return cell;
+        }
+        else {
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([UICollectionViewCell class]) forIndexPath:indexPath];
+            cell.contentView.backgroundColor = UICOLOR_randomColor;
+            
+            return cell;
+        }
+    }
 }
 
 @end

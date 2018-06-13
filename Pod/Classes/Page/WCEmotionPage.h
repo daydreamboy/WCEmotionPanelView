@@ -7,16 +7,23 @@
 
 #import <UIKit/UIKit.h>
 
-@class WCEmotionGroupItem;
+@protocol WCEmotionGroupItem;
+@class WCEmotionGroup;
 
 @interface WCEmotionPage : UIView
 @property (nonatomic, strong) UILabel *textLabel;
-@property (nonatomic, weak, readonly) WCEmotionGroupItem *groupItem;
+@property (nonatomic, weak, readonly) WCEmotionGroup *groupItem;
 @property (nonatomic, assign, readonly) NSUInteger index;
 @property (nonatomic, assign, readonly) NSUInteger groupIndex;
 @property (nonatomic, assign, readonly) CGSize itemSize;
 
-- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroupItem *)groupItem;
+@property (nonatomic, assign, readonly) NSUInteger numberOfItems; /// > 除了reserved items之外的item个数
+@property (nonatomic, assign, readonly) NSUInteger numberOfItemsInRow; /// > 行上的item个数
+@property (nonatomic, assign, readonly) NSUInteger numberOfItemsInColumn; /// > 列上的item个数
+
+@property (nonatomic, assign, readonly) NSUInteger capacityOfPage; /// > 放置item容量（包括reserved items）
+
+- (instancetype)initWithIndex:(NSUInteger)index frame:(CGRect)frame groupItem:(WCEmotionGroup *)groupItem;
 
 - (void)makeOriginXByOffset:(NSNumber *)offset;
 

@@ -8,6 +8,7 @@
 #import "WCEmotionPickerView.h"
 #import "WCEmotionPage.h"
 #import "WCEmotionGroupItem.h"
+#import "WCEmotionGroup.h"
 
 #ifndef UICOLOR_ARGB
 #define UICOLOR_ARGB(color)      [UIColor colorWithRed: (((color) >> 16) & 0xFF) / 255.0 green: (((color) >> 8) & 0xFF) / 255.0 blue: ((color) & 0xFF) / 255.0 alpha: (((color) >> 24) & 0xFF) / 255.0]
@@ -44,7 +45,7 @@
     return self;
 }
 
-- (void)insertPagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
+- (void)insertPagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex {
     NSMutableArray *pagesToInsert = groupItem.pages;
     
     CGFloat pageWidth = self.pageWidth;
@@ -156,7 +157,7 @@
     self.scrollView.contentOffset = CGPointMake(currentPage.frame.origin.x, 0);
 }
 
-- (void)updatePagesWithGroupItem:(WCEmotionGroupItem *)groupItem atGroupIndex:(NSUInteger)groupIndex {
+- (void)updatePagesWithGroupItem:(WCEmotionGroup *)groupItem atGroupIndex:(NSUInteger)groupIndex {
     if (groupIndex > self.pages.count || groupItem.pages.count == 0) {
         return;
     }
@@ -227,7 +228,7 @@
 
 #pragma mark > Properties
 
-- (WCEmotionGroupItem *)currentGroupItem {
+- (WCEmotionGroup *)currentGroupItem {
     return self.currentPage.groupItem;
 }
 
@@ -290,7 +291,7 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    WCEmotionGroupItem *groupItem = self.currentGroupItem;
+    WCEmotionGroup *groupItem = self.currentGroupItem;
     NSLog(@"%d - %d", (int)groupItem.index, (int)self.currentPage.index);
     self.pageControl.numberOfPages = groupItem.numberOfPages;
     self.pageControl.currentPage = self.currentPage.index;

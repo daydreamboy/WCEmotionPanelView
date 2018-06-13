@@ -5,8 +5,10 @@
 //  Created by wesley_chen on 2018/6/9.
 //
 
-#import "WCEmotionItem.h"
+#import "WCEmotionItemModel.h"
 
-@implementation WCEmotionItem
+@implementation WCEmotionItemModel
+
+WCEmotionItem_synthesize
 
 @end

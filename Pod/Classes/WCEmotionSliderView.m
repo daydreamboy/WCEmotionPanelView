@@ -19,7 +19,7 @@
 @property (nonatomic, strong) UIView *leftView;
 @property (nonatomic, strong) UIView *rightView;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray<WCEmotionGroupItem *> *collectionData;
+@property (nonatomic, strong) NSMutableArray<id<WCEmotionGroupItem>> *collectionData;
 
 @end
 
@@ -37,7 +37,7 @@
     return self;
 }
 
-- (void)insertGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index {
+- (void)insertGroupItem:(id<WCEmotionGroupItem>)groupItem atIndex:(NSUInteger)index {
     [self.collectionData insertObject:groupItem atIndex:index];
     [self.collectionView reloadData];
 }
@@ -46,7 +46,7 @@
     
 }
 
-- (void)updateGroupItem:(WCEmotionGroupItem *)groupItem atIndex:(NSUInteger)index {
+- (void)updateGroupItem:(id<WCEmotionGroupItem>)groupItem atIndex:(NSUInteger)index {
     
 }
 
@@ -112,7 +112,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WCEmotionSliderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([WCEmotionSliderCell class]) forIndexPath:indexPath];
-    WCEmotionGroupItem *item = self.collectionData[indexPath.row];
+    id<WCEmotionGroupItem> item = self.collectionData[indexPath.row];
     
     CGSize size = item.groupIcon.size;
     if (!CGSizeEqualToSize(item.groupIconSize, CGSizeZero)) {
@@ -137,7 +137,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    WCEmotionGroupItem *item = self.collectionData[indexPath.row];
+    id<WCEmotionGroupItem> item = self.collectionData[indexPath.row];
     return CGSizeMake(item.width, CGRectGetHeight(self.bounds));
 }
 
