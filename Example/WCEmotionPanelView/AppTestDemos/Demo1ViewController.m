@@ -14,7 +14,7 @@
 
 #import <WCEmotionPanel/WCEmotionPanel.h>
 
-@interface Demo1ViewController ()
+@interface Demo1ViewController () <WCEmotionPanelViewDelegate>
 @property (nonatomic, strong) WCEmotionPanelView *emotionPanelView;
 @property (nonatomic, strong) UIStepper *stepper;
 @property (nonatomic, strong) UILabel *labelIndex;
@@ -44,6 +44,7 @@
         CGSize screenSize = [[UIScreen mainScreen] bounds].size;
         
         WCEmotionPanelView *emotionPanelView = [[WCEmotionPanelView alloc] initWithFrame:CGRectMake(0, 200, screenSize.width, 216)];
+        emotionPanelView.delegate = self;
         _emotionPanelView = emotionPanelView;
     }
     
@@ -157,5 +158,24 @@
     NSUInteger groupIndex = self.stepper.value;
     [self.emotionPanelView updatePagesWithGroupItem:groupItem atGroupIndex:groupIndex];
 }
+
+#pragma mark - WCEmotionPanelViewDelegate
+
+- (void)WCEmotionPanelView:(WCEmotionPanelView *)emotionPanelView didSelectGroupDummyItem:(id<WCEmotionGroupItem>)groupItem atGroupIndex:(NSUInteger)groupIndex {
+    NSLog(@"select dummy item: %@", @(groupIndex));
+}
+
+- (UIView *)WCEmotionPanelView:(WCEmotionPanelView *)emotionPanelView leftViewWithSliderHeight:(CGFloat)sliderHeight {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, sliderHeight)];
+    view.backgroundColor = [UIColor brownColor];
+    return view;
+}
+
+- (UIView *)WCEmotionPanelView:(WCEmotionPanelView *)emotionPanelView rightViewWithSliderHeight:(CGFloat)sliderHeight {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, sliderHeight)];
+    view.backgroundColor = [UIColor yellowColor];
+    return view;
+}
+
 
 @end

@@ -28,22 +28,8 @@
         _emotions = emotions;
         _layoutSize = layoutSize;
         _extraInfo = extraInfo;
-//
-//        _numberOfItemsInRow = (NSUInteger)layoutSize.width;
-//        _numberOfItemsInColomn = (NSUInteger)layoutSize.height;
     }
     return self;
 }
-
-//#pragma mark - Properties
-//
-//- (NSUInteger)numberOfPages {
-//    NSUInteger numberOfItemsInPage = self.numberOfItemsInRow * self.numberOfItemsInColomn;
-//    return (NSUInteger)(ceil(self.emotions.count / (float)numberOfItemsInPage));
-//}
-//
-//- (NSUInteger)numberOfItems {
-//    return self.emotions.count;
-//}
 
 @end

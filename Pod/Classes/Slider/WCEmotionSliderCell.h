@@ -8,5 +8,6 @@
 #import <UIKit/UIKit.h>
 
 @interface WCEmotionSliderCell : UICollectionViewCell
+@property (nonatomic, strong, readonly) UIButton *button;
 @property (nonatomic, strong, readonly) UIImageView *imageView;
 @end

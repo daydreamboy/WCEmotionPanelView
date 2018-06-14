@@ -21,7 +21,13 @@
 @interface WCEmotionPanelView () <WCEmotionSliderViewDelegate, WCEmotionPickerViewDelegate>
 @property (nonatomic, strong) WCEmotionPickerView *emotionPickerView;
 @property (nonatomic, strong) WCEmotionSliderView *emotionSliderView;
+
+@property (nonatomic, strong) UIView *sliderLeftView;
+@property (nonatomic, strong) UIView *sliderRightView;
+
 @property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *groups;
+@property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *groupsLeft;
+@property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *groupsRight;
 @end
 
 @implementation WCEmotionPanelView
@@ -29,40 +35,87 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _groups = [NSMutableArray array];
+        
         [self addSubview:self.emotionPickerView];
         [self addSubview:self.emotionSliderView];
-        _groups = [NSMutableArray array];
     }
     return self;
 }
 
 - (void)insertGroupItem:(id<WCEmotionGroupItem>)groupItem atGroupIndex:(NSUInteger)groupIndex {
-    if (groupItem.emotions.count) {
+    
+    if (groupItem.position == WCEmotionGroupItemPositionSlider) {
         
-        for (NSUInteger i = groupIndex; i < self.groups.count; i++) {
-            WCEmotionGroup *groupItem = self.groups[i];
-            groupItem.index += 1;
+        if (groupItem.emotions.count) {
+            for (NSUInteger i = groupIndex; i < self.groups.count; i++) {
+                WCEmotionGroup *group = self.groups[i];
+                group.index += 1;
+            }
+            
+            WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
+            group.index = groupIndex;
+            group.sliderIndex = groupIndex;
+            [self.groups insertObject:group atIndex:groupIndex];
+            
+            NSLog(@"insert group item: %d pages at index %d", (int)group.numberOfPages, (int)groupIndex);
+            
+            NSMutableArray *pages = [NSMutableArray array];
+            
+            CGSize pageSize = CGSizeMake(self.emotionPickerView.pageWidth, self.emotionPickerView.pageHeight);
+            for (NSUInteger i = 0; i < group.numberOfPages; i++) {
+                WCEmotionPage *page = [[WCEmotionPage alloc] initWithIndex:i frame:CGRectMake(0, 0, pageSize.width, pageSize.height) group:group];
+                //page.backgroundColor = UICOLOR_randomColor;
+                [pages addObject:page];
+            }
+            group.pages = pages;
+            
+            [self.emotionPickerView insertPagesWithGroup:group atGroupIndex:groupIndex];
+            [self.emotionSliderView insertGroup:group atIndex:groupIndex];
         }
         
-        WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
-        group.index = groupIndex;
-        [self.groups insertObject:group atIndex:groupIndex];
-        
-        NSLog(@"insert group item: %d pages at index %d", (int)group.numberOfPages, (int)groupIndex);
-        
-        NSMutableArray *pages = [NSMutableArray array];
-        
-        CGSize pageSize = CGSizeMake(self.emotionPickerView.pageWidth, self.emotionPickerView.pageHeight);
-        for (NSUInteger i = 0; i < group.numberOfPages; i++) {
-            WCEmotionPage *page = [[WCEmotionPage alloc] initWithIndex:i frame:CGRectMake(0, 0, pageSize.width, pageSize.height) group:group];
-            //page.backgroundColor = UICOLOR_randomColor;
-            [pages addObject:page];
+        /*
+        if (!groupItem.dummy) {
+            if (groupItem.emotions.count) {
+                for (NSUInteger i = groupIndex; i < self.groups.count; i++) {
+                    WCEmotionGroup *groupItem = self.groups[i];
+                    groupItem.index += 1;
+                    groupItem.sliderIndex += 1;
+                }
+                
+                WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
+                group.index = groupIndex;
+                [self.groups insertObject:group atIndex:groupIndex];
+                
+                NSLog(@"insert group item: %d pages at index %d", (int)group.numberOfPages, (int)groupIndex);
+                
+                NSMutableArray *pages = [NSMutableArray array];
+                
+                CGSize pageSize = CGSizeMake(self.emotionPickerView.pageWidth, self.emotionPickerView.pageHeight);
+                for (NSUInteger i = 0; i < group.numberOfPages; i++) {
+                    WCEmotionPage *page = [[WCEmotionPage alloc] initWithIndex:i frame:CGRectMake(0, 0, pageSize.width, pageSize.height) group:group];
+                    //page.backgroundColor = UICOLOR_randomColor;
+                    [pages addObject:page];
+                }
+                group.pages = pages;
+                
+                [self.emotionPickerView insertPagesWithGroup:group atGroupIndex:groupIndex];
+                [self.emotionSliderView insertGroup:group atIndex:groupIndex];
+            }
         }
-        group.pages = pages;
-        
-        [self.emotionPickerView insertPagesWithGroup:group atGroupIndex:groupIndex];
-        [self.emotionSliderView insertGroup:group atIndex:groupIndex];
-        [self.emotionSliderView selectGroupAtIndex:self.emotionPickerView.currentGroup.index animated:NO];
+        else {
+            for (NSUInteger i = groupIndex; i < self.groups.count; i++) {
+                WCEmotionGroup *groupItem = self.groups[i];
+                groupItem.sliderIndex += 1;
+            }
+            
+            WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
+            group.dummy = YES;
+            group.sliderIndex = groupIndex;
+            [self.groups insertObject:group atIndex:groupIndex];
+            [self.emotionSliderView insertGroup:group atIndex:groupIndex];
+        }
+         */
     }
 }
 
@@ -108,6 +161,39 @@
     }
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    if (newSuperview) {
+        UIView *leftView;
+        UIView *rightView;
+        
+        if ([self.delegate respondsToSelector:@selector(WCEmotionPanelView:leftViewWithSliderHeight:)]) {
+            leftView = [self.delegate WCEmotionPanelView:self leftViewWithSliderHeight:groupViewHeight];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(WCEmotionPanelView:rightViewWithSliderHeight:)]) {
+            rightView = [self.delegate WCEmotionPanelView:self rightViewWithSliderHeight:groupViewHeight];
+        }
+        
+        _emotionSliderView.frame = CGRectMake(CGRectGetWidth(leftView.bounds), CGRectGetMaxY(_emotionPickerView.frame), CGRectGetWidth(self.bounds) - CGRectGetWidth(leftView.bounds) - CGRectGetWidth(rightView.bounds), groupViewHeight);
+        
+        if (leftView) {
+            CGRect bounds = leftView.bounds;
+            leftView.frame = CGRectMake(0, CGRectGetMinY(_emotionSliderView.frame), bounds.size.width, bounds.size.height);
+            
+            [self addSubview:leftView];
+            _sliderLeftView = leftView;
+        }
+        
+        if (rightView) {
+            CGRect bounds = rightView.bounds;
+            rightView.frame = CGRectMake(CGRectGetMaxX(_emotionSliderView.frame), CGRectGetMinY(_emotionSliderView.frame), bounds.size.width, bounds.size.height);
+            
+            [self addSubview:rightView];
+            _sliderRightView = rightView;
+        }
+    }
+}
+
 #pragma mark - Getters
 
 - (UIView *)emotionPickerView {
@@ -123,9 +209,10 @@
 
 - (UIView *)emotionSliderView {
     if (!_emotionSliderView) {
-        WCEmotionSliderView *view = [[WCEmotionSliderView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.emotionPickerView.frame), CGRectGetWidth(self.bounds), groupViewHeight)];
+        WCEmotionSliderView *view = [[WCEmotionSliderView alloc] initWithFrame:CGRectMake(CGRectGetWidth(_sliderLeftView.bounds), CGRectGetMaxY(self.emotionPickerView.frame), CGRectGetWidth(self.bounds) - CGRectGetWidth(_sliderLeftView.bounds) - CGRectGetWidth(_sliderRightView.bounds), groupViewHeight)];
         view.delegate = self;
         view.backgroundColor = [UIColor greenColor];
+        
         _emotionSliderView = view;
     }
     
@@ -141,8 +228,8 @@
 #pragma mark - WCEmotionPickerViewDelegate
 
 - (void)WCEmotionPickerViewDidEndDecelerating:(WCEmotionPickerView *)emotionPickerView {
-    NSInteger currentGroupIndex = self.emotionPickerView.currentGroup.index;
-    [self.emotionSliderView selectGroupAtIndex:currentGroupIndex animated:YES];
+    WCEmotionGroup *currentGroup = self.emotionPickerView.currentGroup;
+    [self.emotionSliderView selectGroupAtIndex:currentGroup.sliderIndex animated:YES];
 }
 
 @end
