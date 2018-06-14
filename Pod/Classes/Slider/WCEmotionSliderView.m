@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UIView *rightView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *collectionData;
+@property (nonatomic, strong, readwrite) NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -38,17 +39,49 @@
     return self;
 }
 
-- (void)insertGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index {
-    [self.collectionData insertObject:groupItem atIndex:index];
-    [self.collectionView reloadData];
+- (void)insertGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index {
+    if (index <= self.collectionData.count) {
+        [self.collectionData insertObject:group atIndex:index];
+        [self.collectionView reloadData];
+    }
 }
 
-- (void)removeGroupItemAtIndex:(NSUInteger)index {
+- (void)removeGroupAtIndex:(NSUInteger)index {
+    if (index < self.collectionData.count) {
+        [self.collectionData removeObjectAtIndex:index];
+        [self.collectionView reloadData];
+    }
+}
+
+- (void)updateGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index {
     
 }
 
-- (void)updateGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index {
-    
+- (void)selectGroupAtIndex:(NSInteger)index animated:(BOOL)animated {
+    if (0 <= index && index < self.collectionData.count) {
+        [self unselectCellAtIndexPath:self.selectedIndexPath animated:NO];
+        
+        self.selectedIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        
+        [self selectCellAtIndexPath:self.selectedIndexPath animated:NO];
+    }
+    else {
+        [self unselectCellAtIndexPath:self.selectedIndexPath animated:NO];
+    }
+}
+
+- (void)selectCellAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
+    if (0 <= indexPath.row && indexPath.row < self.collectionData.count) {
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+        cell.selected = YES;
+    }
+}
+
+- (void)unselectCellAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
+    if (0 <= indexPath.row && indexPath.row < self.collectionData.count) {
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+        cell.selected = NO;
+    }
 }
 
 #pragma mark -
@@ -134,6 +167,8 @@
     selectedBackgroundView.backgroundColor = [UIColor lightGrayColor];
     cell.selectedBackgroundView = selectedBackgroundView;
     
+    cell.selected = indexPath.row == self.selectedIndexPath.row ? YES : NO;
+    
     return cell;
 }
 
@@ -147,6 +182,10 @@
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [self unselectCellAtIndexPath:self.selectedIndexPath animated:NO];
+    self.selectedIndexPath = indexPath;
+    
     if ([self.delegate respondsToSelector:@selector(WCEmotionSliderView:didSelectGroup:atIndex:)]) {
         [self.delegate WCEmotionSliderView:self didSelectGroup:self.collectionData[indexPath.row] atIndex:indexPath];
     }

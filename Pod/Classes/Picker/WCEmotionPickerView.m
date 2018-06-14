@@ -224,6 +224,9 @@
     
     WCEmotionPage *page = groupOfPages[pageIndex];
     [self.scrollView scrollRectToVisible:page.frame animated:animated];
+    if (!animated) {
+        [self reconfigurePageControlWithScrollView:self.scrollView];
+    }
 }
 
 #pragma mark > Properties
@@ -293,8 +296,13 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     WCEmotionGroup *group = self.currentGroup;
     NSLog(@"%d - %d", (int)group.index, (int)self.currentPage.index);
-    self.pageControl.numberOfPages = group.numberOfPages;
-    self.pageControl.currentPage = self.currentPage.index;
+    [self reconfigurePageControlWithScrollView:scrollView];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    WCEmotionGroup *group = self.currentGroup;
+    NSLog(@"%d - %d", (int)group.index, (int)self.currentPage.index);
+    [self reconfigurePageControlWithScrollView:scrollView];
 }
 
 #pragma mark - Actions
@@ -309,6 +317,12 @@
 }
 
 #pragma mark -
+
+- (void)reconfigurePageControlWithScrollView:(UIScrollView *)scrollView {
+    WCEmotionGroup *group = self.currentGroup;
+    self.pageControl.numberOfPages = group.numberOfPages;
+    self.pageControl.currentPage = self.currentPage.index;
+}
 
 - (NSUInteger)currentPageOfScrollView:(UIScrollView *)scrollView {
     CGFloat pageWidth = scrollView.frame.size.width;

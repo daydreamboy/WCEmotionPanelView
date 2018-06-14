@@ -19,7 +19,10 @@
 @interface WCEmotionSliderView : UIView
 
 @property (nonatomic, weak) id<WCEmotionSliderViewDelegate> delegate;
+@property (nonatomic, strong, readonly) NSIndexPath *selectedIndexPath;
 
-- (void)insertGroupItem:(WCEmotionGroup *)groupItem atIndex:(NSUInteger)index;
+- (void)insertGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index;
+- (void)removeGroupAtIndex:(NSUInteger)index;
+- (void)selectGroupAtIndex:(NSInteger)index animated:(BOOL)animated;
 
 @end

@@ -61,13 +61,16 @@
         group.pages = pages;
         
         [self.emotionPickerView insertPagesWithGroup:group atGroupIndex:groupIndex];
-        [self.emotionSliderView insertGroupItem:group atIndex:groupIndex];
+        [self.emotionSliderView insertGroup:group atIndex:groupIndex];
+        [self.emotionSliderView selectGroupAtIndex:self.emotionPickerView.currentGroup.index animated:NO];
     }
 }
 
 - (void)removePagesAtGroupIndex:(NSUInteger)index {
     NSLog(@"remove group item at index: %d", (int)index);
     if (index < self.groups.count) {
+        BOOL removeDisplayingGroup = index == self.emotionPickerView.currentGroup.index;
+        
         for (NSUInteger i = index; i < self.groups.count; i++) {
             WCEmotionGroup *groupItem = self.groups[i];
             groupItem.index -= 1;
@@ -75,6 +78,12 @@
         
         [self.groups removeObjectAtIndex:index];
         [self.emotionPickerView removePagesAtGroupIndex:index];
+        [self.emotionSliderView removeGroupAtIndex:index];
+        [self.emotionSliderView selectGroupAtIndex:self.emotionPickerView.currentGroup.index animated:NO];
+        
+        if (removeDisplayingGroup) {
+            [self.emotionPickerView scrollToGroupIndex:self.emotionPickerView.currentGroup.index pageIndex:0 animated:NO];
+        }
     }
 }
 
