@@ -22,6 +22,7 @@
 @property (nonatomic, strong, readonly) NSIndexPath *selectedIndexPath;
 
 - (void)insertGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index;
+- (void)updateGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index;
 - (void)removeGroupAtIndex:(NSUInteger)index;
 - (void)selectGroupAtIndex:(NSInteger)index animated:(BOOL)animated;
 

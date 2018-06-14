@@ -164,10 +164,10 @@
     
     CGFloat pageWidth = self.pageWidth;
     
-    WCEmotionPage *currentPage = self.currentPage;
-    
     NSArray *oldGroupOfPages = self.pages[groupIndex];
     NSArray *newGroupOfPages = group.pages;
+    
+    WCEmotionPage *currentPage = self.currentPage;
     
     WCEmotionPage *previousPage = [oldGroupOfPages firstObject];
     CGFloat startX = CGRectGetMinX(previousPage.frame);
@@ -190,16 +190,9 @@
     }
     
     if ([oldGroupOfPages containsObject:currentPage]) {
-        if (groupIndex >= 1) {
-            currentPage = [self.pages[groupIndex - 1] lastObject];
-            self.pageControl.numberOfPages = [self.pages[groupIndex - 1] count];
-            self.pageControl.currentPage = currentPage.index;
-        }
-        else {
-            currentPage = nil;
-            self.pageControl.numberOfPages = newGroupOfPages.count;
-            self.pageControl.currentPage = 0;
-        }
+        currentPage = [newGroupOfPages firstObject];
+        self.pageControl.numberOfPages = [newGroupOfPages count];
+        self.pageControl.currentPage = currentPage.index;
     }
     
     self.pages[groupIndex] = newGroupOfPages;
@@ -297,6 +290,10 @@
     WCEmotionGroup *group = self.currentGroup;
     NSLog(@"%d - %d", (int)group.index, (int)self.currentPage.index);
     [self reconfigurePageControlWithScrollView:scrollView];
+    
+    if ([self.delegate respondsToSelector:@selector(WCEmotionPickerViewDidEndDecelerating:)]) {
+        [self.delegate WCEmotionPickerViewDidEndDecelerating:self];
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {

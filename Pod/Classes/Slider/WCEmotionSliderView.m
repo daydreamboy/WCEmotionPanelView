@@ -54,26 +54,39 @@
 }
 
 - (void)updateGroup:(WCEmotionGroup *)group atIndex:(NSUInteger)index {
-    
+    if (index < self.collectionData.count) {
+        self.collectionData[index] = group;
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)selectGroupAtIndex:(NSInteger)index animated:(BOOL)animated {
     if (0 <= index && index < self.collectionData.count) {
-        [self unselectCellAtIndexPath:self.selectedIndexPath animated:NO];
+        if (index == self.selectedIndexPath.row) {
+            return;
+        }
+        
+        [self unselectCellAtIndexPath:self.selectedIndexPath animated:animated];
         
         self.selectedIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
         
-        [self selectCellAtIndexPath:self.selectedIndexPath animated:NO];
+        [self selectCellAtIndexPath:self.selectedIndexPath animated:animated];
     }
     else {
-        [self unselectCellAtIndexPath:self.selectedIndexPath animated:NO];
+        [self unselectCellAtIndexPath:self.selectedIndexPath animated:animated];
     }
 }
+
+#pragma mark -
 
 - (void)selectCellAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
     if (0 <= indexPath.row && indexPath.row < self.collectionData.count) {
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
         cell.selected = YES;
+        
+        if (animated) {
+            [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        }
     }
 }
 

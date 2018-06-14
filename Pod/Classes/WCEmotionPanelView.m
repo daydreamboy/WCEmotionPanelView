@@ -18,7 +18,7 @@
 
 #define groupViewHeight 34
 
-@interface WCEmotionPanelView () <WCEmotionSliderViewDelegate>
+@interface WCEmotionPanelView () <WCEmotionSliderViewDelegate, WCEmotionPickerViewDelegate>
 @property (nonatomic, strong) WCEmotionPickerView *emotionPickerView;
 @property (nonatomic, strong) WCEmotionSliderView *emotionSliderView;
 @property (nonatomic, strong) NSMutableArray<WCEmotionGroup *> *groups;
@@ -66,19 +66,19 @@
     }
 }
 
-- (void)removePagesAtGroupIndex:(NSUInteger)index {
-    NSLog(@"remove group item at index: %d", (int)index);
-    if (index < self.groups.count) {
-        BOOL removeDisplayingGroup = index == self.emotionPickerView.currentGroup.index;
+- (void)removePagesAtGroupIndex:(NSUInteger)groupIndex {
+    NSLog(@"remove group item at index: %d", (int)groupIndex);
+    if (groupIndex < self.groups.count) {
+        BOOL removeDisplayingGroup = groupIndex == self.emotionPickerView.currentGroup.index;
         
-        for (NSUInteger i = index; i < self.groups.count; i++) {
+        for (NSUInteger i = groupIndex; i < self.groups.count; i++) {
             WCEmotionGroup *groupItem = self.groups[i];
             groupItem.index -= 1;
         }
         
-        [self.groups removeObjectAtIndex:index];
-        [self.emotionPickerView removePagesAtGroupIndex:index];
-        [self.emotionSliderView removeGroupAtIndex:index];
+        [self.groups removeObjectAtIndex:groupIndex];
+        [self.emotionPickerView removePagesAtGroupIndex:groupIndex];
+        [self.emotionSliderView removeGroupAtIndex:groupIndex];
         [self.emotionSliderView selectGroupAtIndex:self.emotionPickerView.currentGroup.index animated:NO];
         
         if (removeDisplayingGroup) {
@@ -90,7 +90,6 @@
 - (void)updatePagesWithGroupItem:(id<WCEmotionGroupItem>)groupItem atGroupIndex:(NSUInteger)groupIndex {
     NSLog(@"update group item at index: %d", (int)groupIndex);
     if (groupIndex < self.groups.count && groupItem.emotions.count) {
-        
         WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
         group.index = groupIndex;
         
@@ -105,6 +104,7 @@
 
         self.groups[groupIndex] = group;
         [self.emotionPickerView updatePagesWithGroup:group atGroupIndex:groupIndex];
+        [self.emotionSliderView updateGroup:group atIndex:groupIndex];
     }
 }
 
@@ -113,6 +113,7 @@
 - (UIView *)emotionPickerView {
     if (!_emotionPickerView) {
         WCEmotionPickerView *view = [[WCEmotionPickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - groupViewHeight)];
+        view.delegate = self;
         view.backgroundColor = [UIColor greenColor];
         _emotionPickerView = view;
     }
@@ -135,6 +136,13 @@
 
 - (void)WCEmotionSliderView:(WCEmotionSliderView *)emotionSliderView didSelectGroup:(WCEmotionGroup *)group atIndex:(NSIndexPath *)indexPath {
     [self.emotionPickerView scrollToGroupIndex:group.index pageIndex:0 animated:YES];
+}
+
+#pragma mark - WCEmotionPickerViewDelegate
+
+- (void)WCEmotionPickerViewDidEndDecelerating:(WCEmotionPickerView *)emotionPickerView {
+    NSInteger currentGroupIndex = self.emotionPickerView.currentGroup.index;
+    [self.emotionSliderView selectGroupAtIndex:currentGroupIndex animated:YES];
 }
 
 @end
