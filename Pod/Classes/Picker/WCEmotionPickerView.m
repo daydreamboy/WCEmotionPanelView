@@ -300,6 +300,10 @@
     WCEmotionGroup *group = self.currentGroup;
     NSLog(@"%d - %d", (int)group.index, (int)self.currentPage.index);
     [self reconfigurePageControlWithScrollView:scrollView];
+    
+    if ([self.delegate respondsToSelector:@selector(WCEmotionPickerViewDidEndScrollingAnimation:)]) {
+        [self.delegate WCEmotionPickerViewDidEndScrollingAnimation:self];
+    }
 }
 
 #pragma mark - Actions

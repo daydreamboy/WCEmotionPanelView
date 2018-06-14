@@ -231,4 +231,9 @@
     [self.emotionSliderView selectGroupAtIndex:currentGroup.index animated:YES];
 }
 
+- (void)WCEmotionPickerViewDidEndScrollingAnimation:(WCEmotionPickerView *)emotionPickerView {
+    WCEmotionGroup *currentGroup = self.emotionPickerView.currentGroup;
+    [self.emotionSliderView selectGroupAtIndex:currentGroup.index animated:YES];
+}
+
 @end

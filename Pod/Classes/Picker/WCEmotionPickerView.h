@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol WCEmotionPickerViewDelegate <NSObject>
 - (void)WCEmotionPickerViewDidEndDecelerating:(WCEmotionPickerView *)emotionPickerView;
+- (void)WCEmotionPickerViewDidEndScrollingAnimation:(WCEmotionPickerView *)emotionPickerView;
 @end
 
 
