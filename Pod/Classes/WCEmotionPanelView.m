@@ -55,7 +55,6 @@
             
             WCEmotionGroup *group = [WCEmotionGroup newWithEmotionGroupItem:groupItem];
             group.index = groupIndex;
-            group.sliderIndex = groupIndex;
             [self.groups insertObject:group atIndex:groupIndex];
             
             NSLog(@"insert group item: %d pages at index %d", (int)group.numberOfPages, (int)groupIndex);
@@ -229,7 +228,7 @@
 
 - (void)WCEmotionPickerViewDidEndDecelerating:(WCEmotionPickerView *)emotionPickerView {
     WCEmotionGroup *currentGroup = self.emotionPickerView.currentGroup;
-    [self.emotionSliderView selectGroupAtIndex:currentGroup.sliderIndex animated:YES];
+    [self.emotionSliderView selectGroupAtIndex:currentGroup.index animated:YES];
 }
 
 @end

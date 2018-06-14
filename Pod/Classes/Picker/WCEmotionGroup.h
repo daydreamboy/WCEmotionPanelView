@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSArray<id<WCEmotionItem>> *reservedItems;
 
 @property (nonatomic, assign) NSUInteger index;
-@property (nonatomic, assign) NSUInteger sliderIndex; // index for slider
 @property (nonatomic, strong) NSMutableArray<WCEmotionPage *> *pages;
 @property (nonatomic, strong) Class cellClass;
 
