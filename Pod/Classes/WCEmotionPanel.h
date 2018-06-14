@@ -9,6 +9,4 @@
 
 #import "WCEmotionPanelView.h"
 #import "WCEmotionGroupItem.h"
-#import "WCEmotionPage.h"
 #import "WCEmotionItem.h"
-
